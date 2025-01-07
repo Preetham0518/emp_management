@@ -1,0 +1,79 @@
+{%extends 'base.html'%}
+{%block content%}
+
+<div class="pagetitle">
+    <h1>Employee Report</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'reportlist'%}">Home</a></li>
+            <li class="breadcrumb-item">Reports</li>
+            <li class="breadcrumb-item active">Report Details</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border border-primary">
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-heading">Employee Report List</h5>
+
+                            <form method="GET" action="{% url 'reportlist'%}">
+                            <div class="d-flex">
+                                <input type="date" class="form-control me-2" name="start_date" placeholder="start date" value="{{request.GET.start_date}}">
+                                <input  type="date" class="form-control me-2" name="end_date" placeholder="end date(optional)"value="{{request.GET.end_date}}">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>  
+                            </form>
+                            <a href="{% url 'Download'%}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">
+                                <button type="button" class="btn btn-success">
+                                    <i class="bi bi-download me-1"></i> Download as Excel
+                                </button> 
+                            </a>
+                        </div>
+                    </div>
+                    <table class="display responsive" id="myTable" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>Sl. No</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in report %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ employee.name }}</td>
+                                <td>{{ employee.contact }}</td>
+                                <td>{{employee.department.name}}</td>
+                                <td>{{employee.designation.designation_name}}</td>
+                                <td>{{employee.status}}</td>
+                                {% comment %} <td>
+                                    <a href="" class="btn btn-outline-info">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a href="" class="btn btn-outline-success">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td> {% endcomment %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{%endblock%}

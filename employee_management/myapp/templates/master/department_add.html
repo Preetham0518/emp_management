@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{%load crispy_forms_tags %} 
+
+{% block content %}
+<div class="pagetitle">
+    <h1>Add Department</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'department_list' %}">Home</a></li>
+            <li class="breadcrumb-item">Master</li>
+            <li class="breadcrumb-item active">Add Department</li>
+        </ol>
+    </nav>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Enter the Details of the Department</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success">Save Department</button>
+                            <a href="{% url 'department_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div>
+{% if messages %}
+  <div id="message-container">
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

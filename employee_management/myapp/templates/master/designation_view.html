@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Designation Details</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'designation_list' %}">Home</a></li>
+            <li class="breadcrumb-item">Master</li>
+            <li class="breadcrumb-item active">Designation Details</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border border-primary p-4">
+                
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Designation Name</th>
+                            <td class="col-lg-8">{{ designation.designation_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Description</th>
+                            <td class="col-lg-8">{{ designation.designation_description }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Created At</th>
+                            <td class="col-lg-8">{{ designation.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Updated At</th>
+                            <td class="col-lg-8">{{ designation.updated_at }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Created By</th>
+                            <td class="col-lg-8">{{ designation.created_by }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Updated By</th>
+                            <td class="col-lg-8">{{ designation.updated_by }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="{% url 'designation_list' %}">
+                    <button class="btn btn-dark">
+                        <i class="bi bi-arrow-left-square me-1"></i>Back
+                    </button>
+                </a>
+            </div>
+            
+
+            {% comment %} <div class="card border border-primary p-4">
+                <h5 class="card-heading">Department Staff</h5>
+                <table class="display responsive" style="width: 100%" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-md dt-nowrap">Sl.No</th>
+                            <th scope="col" class="text-md dt-nowrap">Employee Name</th>
+                            <th scope="col" class="text-md dt-nowrap">Designation</th>
+                            <th scope="col" class="text-md dt-nowrap">Phone No</th>
+                            <th scope="col" class="text-md dt-nowrap">Is Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in department.employees %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td class="dt-nowrap">{{ employee.name }}</td>
+                            <td class="dt-nowrap">{{ employee.designation }}</td>
+                            <td class="dt-nowrap">{{ employee.phone_number }}</td>
+                            <td class="dt-nowrap">{{ employee.is_active }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'department_list' %}">
+            <button class="btn btn-outline-success">
+                <i class="bi bi-arrow-left-square me-1"></i>Back
+            </button>
+        </a>
+    </div>
+</section> {% endcomment %}
+
+{% endblock %}

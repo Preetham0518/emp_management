@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Employee Details</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'employee_list' %}">Home</a></li>
+            <li class="breadcrumb-item">Employee</li>
+            <li class="breadcrumb-item active">Employee Details</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border border-primary p-4">
+                
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Employee Name</th>
+                            <td class="col-lg-8">{{ employee.name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Join Date</th>
+                            <td class="col-lg-8">{{ employee.join_date }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Employee No</th>
+                            <td class="col-lg-8">{{employee.employee_no}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Address</th>
+                            <td class="col-lg-8">{{employee.address}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Department</th>
+                            <td class="col-lg-8">{{employee.department.name}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Designation</th>
+                            <td class="col-lg-8">{{employee.designation}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Photo</th>
+                            <td class="col-lg-8">
+                                <img src="/media/{{employee.photo}}" width=100 height=70>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Skills</th>
+                            <td class="col-lg-8">
+                                {% if skills %}
+                                <ul>
+                                    {% for skill in skills %}
+                                    <li><strong>{{ skill.skill_name }}:</strong> {{ skill.description }}</li>
+                                    {% empty %}
+                                    <li>No skills available.</li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                No skills available.
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Created At</th>
+                            <td class="col-lg-8">{{ employee.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Updated At</th>
+                            <td class="col-lg-8">{{ employee.updated_at }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Created By</th>
+                            <td class="col-lg-8">{{ employee.created_by }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="col-lg-4">Updated By</th>
+                            <td class="col-lg-8">{{ employee.updated_by }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="{% url 'employee_list' %}">
+                    <button class="btn btn-dark">
+                        <i class="bi bi-arrow-left-square me-1"></i>Back
+                    </button>
+                </a>
+            </div>
+            
+
+            {% comment %} <div class="card border border-primary p-4">
+                <h5 class="card-heading">Department Staff</h5>
+                <table class="display responsive" style="width: 100%" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-md dt-nowrap">Sl.No</th>
+                            <th scope="col" class="text-md dt-nowrap">Employee Name</th>
+                            <th scope="col" class="text-md dt-nowrap">Designation</th>
+                            <th scope="col" class="text-md dt-nowrap">Phone No</th>
+                            <th scope="col" class="text-md dt-nowrap">Is Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in department.employees %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td class="dt-nowrap">{{ employee.name }}</td>
+                            <td class="dt-nowrap">{{ employee.designation }}</td>
+                            <td class="dt-nowrap">{{ employee.phone_number }}</td>
+                            <td class="dt-nowrap">{{ employee.is_active }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'department_list' %}">
+            <button class="btn btn-outline-success">
+                <i class="bi bi-arrow-left-square me-1"></i>Back
+            </button>
+        </a>
+    </div>
+</section> {% endcomment %}
+
+{% endblock %}

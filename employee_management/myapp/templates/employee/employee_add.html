@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="pagetitle">
+    <h1>Add Employee</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'employee_list' %}">Home</a></li>
+            <li class="breadcrumb-item">Employee</li>
+            <li class="breadcrumb-item active">Add Employee</li>
+        </ol>
+    </nav>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add the Details of the Employee</h5>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div id="form-container">
+                            {{ formset.management_form }}
+                            {% for form in formset %}
+                            <div class="row align-items-center mb-3 form-row">
+                                {{form.id}}
+                                <div class="col-md-5">
+                                    {{ form.skill_name.label_tag }}
+                                    {{ form.skill_name }}
+                                </div>
+                                <div class="col-md-5">
+                                    {{ form.description.label_tag }}
+                                    {{ form.description }}
+                                </div>
+                                <div class="col-md-2 align-self-end">
+                                    <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button id="add-more" type="button" class="btn btn-primary">Add Skill</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{% url 'employee_list' %}">
+            <button class="btn btn-dark">
+                <i class="bi bi-arrow-left-square me-1"></i>Back
+            </button>
+        </a>
+    </div>
+</section>
+<script>
+    const addMoreBtn = document.getElementById('add-more');
+    const formContainer = document.getElementById('form-container');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+
+    // Function to add a new form
+    function addNewForm() {
+        // Get the total number of forms
+        const formCount = parseInt(totalForms.value);
+
+        // Get the first form row to clone
+        const firstForm = formContainer.querySelector('.form-row');
+        if (!firstForm) {
+            console.error('No form row found to clone.');
+            return;
+        }
+
+        // Create a new form based on the first form (this is your empty form)
+        const newForm = firstForm.cloneNode(true);
+
+        // Update the form's indices (form-TOTAL_FORMS, form-0-skill_name, form-0-description)
+        newForm.innerHTML = newForm.innerHTML.replace(/form-\d+/g, `form-${formCount}`);
+        newForm.querySelectorAll('input, select, textarea').forEach(function (input) {
+            input.name = input.name.replace(/form-\d+/g, `form-${formCount}`);
+            input.id = input.id.replace(/form-\d+/g, `form-${formCount}`);
+            input.value = ''; // Clear the value of the cloned input fields
+        });
+
+        // Append the new form to the container
+        formContainer.appendChild(newForm);
+
+        // Increment the total form count
+        totalForms.value = formCount + 1;
+
+        // Attach event listener to remove button
+        const removeBtn = newForm.querySelector('.remove-btn');
+        removeBtn.addEventListener('click', function () {
+            newForm.remove();
+            updateFormIndices(); // Update the form indices when one is removed
+        });
+    }
+
+    // Function to update the indices after a form is removed
+    function updateFormIndices() {
+        const forms = formContainer.querySelectorAll('.form-row');
+        forms.forEach((form, index) => {
+            // Update the form field names and the delete button's indices
+            form.innerHTML = form.innerHTML.replace(/form-\d+/g, `form-${index}`);
+            form.querySelectorAll('input, select, textarea').forEach(function (input) {
+                input.name = input.name.replace(/form-\d+/g, `form-${index}`);
+                input.id = input.id.replace(/form-\d+/g, `form-${index}`);
+            });
+        });
+        totalForms.value = forms.length; // Update TOTAL_FORMS value
+    }
+
+    // Attach event listener to initial remove buttons
+    document.querySelectorAll('.remove-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const formRow = btn.closest('.form-row');
+            formRow.remove();
+            updateFormIndices(); // Update form indices when a form is removed
+        });
+    });
+
+    // Attach event listener to "Add Skill" button
+    addMoreBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        addNewForm();
+    });
+</script>
+{% endblock %}
