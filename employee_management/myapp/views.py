@@ -32,9 +32,14 @@ def register(request):
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
             if form.is_valid():
-                form.save()
-                user = form.cleaned_data.get('username')
-                messages.success(request, f'Account was created for {user}')
+                user=form.save()
+                default_group_name = 'users' 
+                default_group, created = Group.objects.get_or_create(name=default_group_name)
+                user.groups.add(default_group)
+                
+                
+                username = form.cleaned_data.get('username')
+                messages.success(request, f'Account was created for {username}')
                 return redirect('user_login')
             else:
                 print(form.errors)
@@ -74,7 +79,6 @@ def department_list(request):
     return render(request, 'master/department_list.html', {'departments': departments,'logged_in_user':logged_in_user,'is_admin': is_admin})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def department_add(request):
     if request.method == 'POST':
         form = DepartmentForm(request.POST)
@@ -93,7 +97,6 @@ def department_add(request):
     return render(request, 'master/department_add.html', {'form': form})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def department_update(request,pk):
     obj = get_object_or_404(Department, pk=pk)
     
@@ -110,7 +113,6 @@ def department_update(request,pk):
     return render(request,'master/department_edit.html',{'form':form})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def department_view(request,pk):
     obj = get_object_or_404(Department,pk=pk)
     return render(request, 'master/department_view.html', {'obj':obj})
@@ -123,7 +125,6 @@ def designation_list(request):
     return render(request, 'master/designationlist.html',{'designations':designations,'logged_in_user':logged_in_user,'is_admin':is_admin})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def designation_add(request):
     if request.method == 'POST':
         form = DesignationForm(request.POST)
@@ -138,7 +139,6 @@ def designation_add(request):
     return render(request, 'master/designation_add.html', {'form': form})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def designation_update(request,pk):
     designation = get_object_or_404(Designation, pk=pk)
     if request.method == 'POST':
@@ -155,7 +155,6 @@ def designation_update(request,pk):
     return render(request, 'master/designation_edit.html',{'form':form})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def designation_view(request,pk):
     designation = get_object_or_404(Designation,pk=pk)
     return render(request, 'master/designation_view.html',{'designation':designation})
@@ -168,7 +167,6 @@ def location_list(request):
     return render(request,'master/locationlist.html',{'locations':locations,'logged_in_user':logged_in_user,'is_admin':is_admin})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def location_add(request):
     if request.method == 'POST':
         form = LocationForm(request.POST)
@@ -184,7 +182,6 @@ def location_add(request):
 
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def location_update(request,pk):
     location = get_object_or_404(Location, pk=pk)
     if request.method == 'POST':
@@ -197,7 +194,6 @@ def location_update(request,pk):
     return render(request,'master/location_edit.html',{'form':form})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def location_view(request,pk):
     location = get_object_or_404(Location, pk=pk)
     return render(request,'master/location_view.html',{'location':location})
@@ -212,7 +208,6 @@ def employee_list(request):
 
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def employee_add(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST,request.FILES)
@@ -234,7 +229,6 @@ def employee_add(request):
     return render(request,'employee/employee_add.html',{'form':form,'formset':formset})
 
 @login_required(login_url='user_login')
-@allowed_users(allowed_roles=['admin'])
 def employee_update(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
     SkillFormSet = modelformset_factory(Skill,form=SkillForm,extra=0)
@@ -702,6 +696,8 @@ def location_delete(request,pk):
         location.delete()
         messages.success(request, "Location deleted Successfully")
         return redirect('location_list')
+    
+
 
 
 @login_required(login_url='user_login')

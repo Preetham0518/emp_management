@@ -6,14 +6,10 @@ from django.forms import modelformset_factory
 
 
 class CreateUserForm(UserCreationForm):
-    user_type = forms.ChoiceField(choices=[('admin','admin'),('users','users')])
+    user_type = forms.ChoiceField(choices=[('admin','admin'),('users','users')],required= False)
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2','user_type']
-
-
-
-
+        fields = ['username', 'email', 'password1', 'password2']
 
 
 

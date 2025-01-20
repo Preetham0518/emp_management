@@ -25,13 +25,11 @@
                                 Import
                               </button>
                               <div>
-                                {%if is_admin%}
                             <a href="{% url 'employee_add' %}">
                                 <button type="button" class="btn btn-success">
                                     <i class="bi bi-plus-circle me-1"></i> Add Employee
                                 </button>
                             </a>
-                            {%endif%}
                             <a href="{% url 'employee_export'%}">
                                 <button type="button" class="btn btn-success">
                                     <i class="bi bi-download me-1"></i>
@@ -50,9 +48,7 @@
                                 <th>Department</th>
                                 <th>Designation</th>
                                 <th>Location</th>
-                                {% if is_admin %}
                                 <th>Action</th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -64,7 +60,6 @@
                                 <td>{{ employee.department_name }}</td>
                                 <td>{{ employee.designation_name }}</td>
                                 <td>{{ employee.location_name }}</td>
-                                {% if is_admin %}
                                 <td>
                                     <a href="{% url 'employee_update' employee.employee_id %}" class="btn btn-outline-info">
                                         <i class="bi bi-pencil-fill"></i>
@@ -82,7 +77,6 @@
                                         <i class="bi bi-envelope-fill"></i>
                                     </button>
                                 </td>
-                                {%endif%}
                             </tr>
                             {% endfor %}
                         </tbody>

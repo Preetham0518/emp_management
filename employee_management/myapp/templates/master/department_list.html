@@ -24,14 +24,12 @@
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                                 Import
                               </button>
-                              {%if is_admin%}
                             <div>
                                 <a href="{% url 'department_add' %}">
                                     <button type="button" class="btn btn-success">
                                         <i class="bi bi-plus-circle me-1"></i> Add Department
                                     </button>
                                 </a>
-                                {%endif%}
                                 <a href="{% url 'department_export'%}">
                                     <button type="button" class="btn btn-success">
                                         <i class="bi bi-download me-1"></i>
@@ -46,9 +44,7 @@
                                 <th>Sl. No</th>
                                 <th>Name</th>
                                 <th>Description</th>
-                                {% if is_admin %}
                                 <th>Action</th>
-                                {%endif%}
                             </tr>
                         </thead>
                         <tbody>
@@ -57,7 +53,6 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ department.name }}</td>
                                 <td>{{ department.description }}</td>
-                                {%if is_admin%}
                                 <td>
                                     <a href="{%url 'department_update' department.department_id %}" class="btn btn-outline-info">
                                         <i class="bi bi-pencil-fill"></i>
@@ -69,7 +64,6 @@
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </td>
-                                {%endif%}
                             </tr>
                             {% endfor %}
                         </tbody>
