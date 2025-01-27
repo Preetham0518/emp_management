@@ -111,4 +111,54 @@
     });
     
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+
+        if (!$.fn.dataTable.isDataTable('#myTable')) {
+            var table = $("#myTable").DataTable({
+                "serverSide": true,
+                "paging": true,
+                "ordering": false,
+                "pageLength": 10,
+                "ajax": {
+                    "url": "/user_data/",  
+                    "type": "POST",  
+                    "dataType": "json",
+                    "beforeSend": function(xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    "error": function () {
+                        $("#myTable tbody").empty().append('<tr><td colspan="5">ERROR loading data</td></tr>');
+                    }
+                },
+                "columns":[
+
+                    { "data": "user.id" }, 
+                    { "data": "name" },
+                    { "data": "email" },
+                        "data": "user_id", 
+                        "render": function(data) {
+                            return `
+                                <a href="/user_update/${data}" class="btn btn-outline-info">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="/user_view/${data}" class="btn btn-outline-success">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger delete-button" data-pk="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+        $("#myTable").on("click", ".delete-button", function () {
+            const userPk = $(this).data("pk");
+            document.getElementById("deleteForm").action = `/user_delete/${userPk}/`;
+        });
+</script>
+
 {% endblock %}

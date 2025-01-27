@@ -45,10 +45,10 @@ class EmployeeForm(forms.ModelForm):
         fields = ['join_date','employee_no','name','contact','address','emp_start_date',
                   'emp_end_date','photo','status','department','designation','location']
         widgets = {
-            'department' : forms.Select(attrs={'class':'form-select'}),
-            'designation': forms.Select(attrs={'class':'form-select'}),
+            'department' : forms.Select(attrs={'class':'form-select','id':'id_department'}),
+            'designation': forms.Select(attrs={'class':'form-select','id':'id_designation'}),
             'location': forms.Select(attrs={'class':'form-select'}),
-            'address': forms.Textarea(attrs={'class':'form-control','rows':2}),
+            'address': forms.Textarea(attrs={'class':'form-control,','rows':2}),
             'status': forms.Select(attrs={'class':'form-select'}),
             'join_date': forms.DateInput(attrs={'type':'date'}),
             'emp_start_date': forms.DateInput(attrs={'type':'date'}),

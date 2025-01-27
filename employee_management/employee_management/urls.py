@@ -59,6 +59,12 @@ urlpatterns = [
     path('designation_delete/<str:pk>/', designation_delete,name="designation_delete"),
     path('location_delete/<str:pk>/', location_delete, name="location_delete"),
     path('employee_export',employee_export,name="employee_export"),
+    path('ajax/load-designations/', load_designations, name='load_designations'),
+    path('department_data/',department_data,name="department_data"),
+    path('designation_data/',designation_data,name="designation_data"),
+    path('location_data/',location_data,name="location_data"),
+    path('employee_data/',employee_data,name="employee_data"),
+    path('report_data/',report_data,name="report_data"),
     ]
 
 if settings.DEBUG:

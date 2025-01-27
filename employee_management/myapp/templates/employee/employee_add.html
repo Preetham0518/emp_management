@@ -127,4 +127,26 @@
         addNewForm();
     });
 </script>
+
+<script>
+    document.getElementById('id_department').addEventListener('change', function () {
+      const departmentId = this.value;
+      const url = '/ajax/load-designations/?department_id=' + departmentId;
+  
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const designationSelect = document.getElementById('id_designation');
+          designationSelect.innerHTML = '<option value="">--Select Designation--</option>';
+          console.log(data);
+          data.forEach(designation => {
+            const option = document.createElement('option');
+            option.value = designation.designation_id;
+            option.textContent = designation.designation_name;
+            designationSelect.appendChild(option);
+          });
+        });
+    });
+  </script>
+
 {% endblock %}

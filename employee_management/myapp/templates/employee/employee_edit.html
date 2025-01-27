@@ -127,4 +127,51 @@
         addNewForm();
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function loadDesignations(department_id, selectedDesignationId = null) {
+            const url = `/ajax/load-designations/?department_id=${department_id}`;
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load designations.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const designationSelect = document.getElementById('id_designation');
+                    designationSelect.innerHTML = '<option value="">--Select Designation--</option>';
+                    data.forEach(designation => {
+                        const option = document.createElement('option');
+                        option.value = designation.designation_id;
+                        option.textContent = designation.designation_name;
+                        if (designation.designation_id == selectedDesignationId) {
+                            option.selected = true; 
+                        }
+                        designationSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Error loading designations. Please try again.");
+                });
+        }
+
+        const departmentSelect = document.getElementById('id_department');
+        const currentDepartmentId = departmentSelect.value;
+        const currentDesignationId = '{{ current_designation|escapejs }}'; 
+
+        if (currentDepartmentId) {
+            loadDesignations(currentDepartmentId, currentDesignationId);
+        }
+
+        
+        departmentSelect.addEventListener('change', function () {
+            const departmentId = this.value;
+            loadDesignations(departmentId);
+        });
+    });
+</script>
+
 {% endblock %}

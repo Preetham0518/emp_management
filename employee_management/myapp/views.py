@@ -24,6 +24,7 @@ from django.http import JsonResponse
 from .database_query import get_department, get_designation, get_location, get_employees
 from datetime import datetime
 from django.utils.dateparse import parse_date
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -258,7 +259,13 @@ def employee_update(request, employee_id):
     else:
         form = EmployeeForm(instance=employee)
         formset = SkillFormSet(queryset=Skill.objects.filter(employee=employee))
-    return render(request, 'employee/employee_edit.html', {'form': form,'formset':formset})
+    return render(request, 'employee/employee_edit.html', 
+                  {'form': form,
+                    'formset':formset,
+                    'current_department':employee.department_id,
+                    'current_designation':employee.designation_id,})
+                                                           
+                                                           
 
 
 @login_required(login_url='user_login')
@@ -443,7 +450,7 @@ def send_email(request, employee_id):
             buffer.seek(0)
 
             subject = f"Employee Details: {employee.name}"
-            body = f"Please find attached the details of {employee.name}."
+            body = f"Please find attached details of {employee.name}."
             from_email = "sai.preetham0518@gmail.com" 
             email = EmailMessage(subject, body, from_email, [recipient_email])
             email.attach(f"{employee.name}_details.pdf", buffer.getvalue(), "application/pdf")
@@ -708,3 +715,232 @@ def user_delete(request,pk):
         user.delete()
         messages.success(request,"User deleted Successfully")
     return redirect('user_list')
+
+
+def load_designations(request):
+    department_id = request.GET.get('department_id')
+    designations = Designation.objects.filter(department_id=department_id)
+    data =list(designations.values('designation_id','designation_name'))
+    return JsonResponse(data, safe=False)
+
+
+def department_data(request):
+    if request.method == "POST":
+        
+        start_index = int(request.POST.get('start', 0))
+        page_length = int(request.POST.get('length', 10))
+        search_value = request.POST.get('search[value]', '').strip()
+        draw = int(request.POST.get('draw', 1))
+
+        
+        departments = Department.objects.all()
+        if search_value:
+            departments = departments.filter(name__icontains=search_value)
+
+        
+        total_records = Department.objects.count()
+
+       
+        filtered_records = departments.count()
+
+       
+        departments = departments[start_index:start_index + page_length]
+
+        
+        data = [
+            {
+                'department_id': department.department_id,
+                'name': department.name,
+                'description': department.description,
+            }
+            for department in departments
+        ]
+
+        #
+        response = {
+            'draw': draw,  
+            'recordsTotal': total_records,  
+            'recordsFiltered': filtered_records,  
+            'data': data, 
+        }
+
+        return JsonResponse(response)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+    
+
+def designation_data(request):
+    if request.method == "POST":
+        
+        start_index = int(request.POST.get('start', 0))
+        page_length = int(request.POST.get('length', 10))
+        search_value = request.POST.get('search[value]', '').strip()
+        draw = int(request.POST.get('draw', 1))
+
+        
+        designations = Designation.objects.all()
+        if search_value:
+            designations = designations.filter(name__icontains=search_value)
+
+        
+        total_records = Designation.objects.count()
+
+       
+        filtered_records = designations.count()
+
+       
+        designations = designations[start_index:start_index + page_length]
+
+        
+        data = [
+            {
+                'designation_id': designation.designation_id,
+                'designation_name': designation.designation_name,
+                'designation_description': designation.designation_description,
+            }
+            for designation in designations
+        ]
+
+        #
+        response = {
+            'draw': draw,  
+            'recordsTotal': total_records,  
+            'recordsFiltered': filtered_records,  
+            'data': data, 
+        }
+
+        return JsonResponse(response)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+def location_data(request):
+    if request.method == "POST":
+        
+        start_index = int(request.POST.get('start', 0))
+        page_length = int(request.POST.get('length', 10))
+        search_value = request.POST.get('search[value]', '').strip()
+        draw = int(request.POST.get('draw', 1))
+
+        
+        locations = Location.objects.all()
+        if search_value:
+            locations = locations.filter(name__icontains=search_value)
+
+        
+        total_records = Location.objects.count()
+
+       
+        filtered_records = locations.count()
+
+       
+        locations = locations[start_index:start_index + page_length]
+
+        
+        data = [
+            {
+                'location_id': locations.location_id,
+                'name': locations.name,
+                'description': locations.description,
+            }
+            for locations in locations
+        ]
+
+        #
+        response = {
+            'draw': draw,  
+            'recordsTotal': total_records,  
+            'recordsFiltered': filtered_records,  
+            'data': data, 
+        }
+
+        return JsonResponse(response)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+def employee_data(request):
+    if request.method == "POST":
+        start_index = int(request.POST.get('start', 0))
+        page_length = int(request.POST.get('length', 10))
+        search_value = request.POST.get('search[value]', '').strip()
+        draw = int(request.POST.get('draw', 1))
+
+        
+        employees = Employee.objects.all()
+        if search_value:
+            employees = employees.filter(name__icontains=search_value)
+
+        
+        total_records = Employee.objects.count()
+
+       
+        filtered_records = employees.count()
+
+       
+        employees = employees[start_index:start_index + page_length]
+
+        
+        data = [
+            {
+                'employee_id': employees.employee_id,
+                'name': employees.name,
+                'contact': employees.contact,
+                'department': employees.department.name,
+                'designation': employees.designation.designation_name,
+                'location': employees.location.name,
+            }
+            for employees in employees
+        ]
+
+        #
+        response = {
+            'draw': draw,  
+            'recordsTotal': total_records,  
+            'recordsFiltered': filtered_records,  
+            'data': data, 
+        }
+
+        return JsonResponse(response)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+def report_data(request):
+    if request.method == "POST":
+        start_index = int(request.POST.get('start', 0))  
+        page_length = int(request.POST.get('length', 10))  
+        search_value = request.POST.get('search[value]', '').strip()  
+        draw = int(request.POST.get('draw', 1))  
+
+        
+        report = Employee.objects.all()
+
+        if search_value:
+            report = report.filter(name__icontains=search_value)  
+
+        total_records = Employee.objects.count()
+        filtered_records = report.count()
+        report = report[start_index:start_index + page_length] 
+
+        data = [
+            {
+                'employee_id': emp.employee_id,
+                'name': emp.name,
+                'contact': emp.contact,
+                'department_name': emp.department.name ,
+                'designation_name': emp.designation.name,
+                'location_name': emp.location.name,
+                'status': emp.status,
+            }
+            for emp in report
+        ]
+
+        response = {
+            'draw': draw,  
+            'recordsTotal': total_records,  
+            'recordsFiltered': filtered_records, 
+            'data': data,  
+        }
+
+        return JsonResponse(response)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)

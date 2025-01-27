@@ -81,19 +81,35 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="{% url 'department_upload' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                  <label for="file" class="form-label">Choose a file to upload</label>
-                  <input type="file" class="form-control" id="file" name="file" accept=".xls, .xlsx" required>
+          
+          {% if messages %}
+            <div id="upload-feedback">
+              {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </form>
+              {% endfor %}
+            </div>
+          {% endif %}
+          
+          <!-- File Upload Form -->
+          <form action="{% url 'department_upload' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="file" class="form-label">Choose a file to upload</label>
+              <input type="file" class="form-control" id="file" name="file" accept=".xls, .xlsx" required>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary me-2">Upload</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+  
 
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -125,18 +141,57 @@
   </div>
 {% endif %}
 
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
-        const deleteForm = document.getElementById("deleteForm");
-    
-        deleteButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                const departmentPk = button.getAttribute("data-pk");
-                deleteForm.action = `/department_delete/${departmentPk}/`;
+    document.addEventListener("DOMContentLoaded", function () {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+
+        if (!$.fn.dataTable.isDataTable('#myTable')) {
+            var table = $("#myTable").DataTable({
+                "serverSide": true,
+                "paging": true,
+                "ordering": false,
+                "pageLength": 10,
+                "ajax": {
+                    "url": "/department_data/",  
+                    "type": "POST",  
+                    "dataType": "json",
+                    "beforeSend": function(xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    "error": function (e) {
+                        $("#myTable tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+                    }
+                },
+                "columns": [
+                    {"sl.no": i + 1}
+                    { "data": "department.department_id" },
+                    { "data": "name" },
+                    { "data": "description" },
+                    { 
+                        "data": "department_id",
+                        "render": function(data, type, row) {
+                            return `
+                                <a href="/department_update/${data}" class="btn btn-outline-info">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="/department_view/${data}" class="btn btn-outline-success">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger delete-button" data-pk="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            `;
+                        }
+                    }
+                ]
             });
+        }
+
+        $("#myTable").on("click", ".delete-button", function () {
+            const departmentPk = $(this).data("pk");
+            document.getElementById("deleteForm").action = `/department_delete/${departmentPk}/`;
         });
     });
-    
 </script>
 {% endblock %}

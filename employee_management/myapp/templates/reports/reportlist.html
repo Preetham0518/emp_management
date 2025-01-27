@@ -75,5 +75,40 @@
         </div>
     </div>
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+
+        if (!$.fn.dataTable.isDataTable('#myTable')) {
+            var table = $("#myTable").DataTable({
+                "serverSide": true,
+                "paging": true,
+                "ordering": false,
+                "pageLength": 10,
+                "ajax": {
+                    "url": "/report_data/",  
+                    "type": "POST",  
+                    "dataType": "json",
+                    "beforeSend": function(xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    "error": function (e) {
+                        $("#myTable tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+                    }
+                },
+                "columns": [
+                    {"sl.no": i + 1}
+                    { "data": "employee_id" },
+                    { "data": "name" },
+                    { "data": "contact" },
+                    { "data": "department_name" },
+                    { "data": "designation_name" },
+                    { "data": "location_name" },
+                    {"data": "status"},
+                ]
+            });
+        }
+    });
+</script>
 
 {%endblock%}
