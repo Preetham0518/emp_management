@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request:redirect('register')),
+    path('', lambda request:redirect('user_login/')),
     path('departments/', department_list, name="department_list"),
     path('department_add/',department_add,name="department_add" ),
     path('department_update/<str:pk>/', department_update, name="department_update"),
@@ -65,6 +65,7 @@ urlpatterns = [
     path('location_data/',location_data,name="location_data"),
     path('employee_data/',employee_data,name="employee_data"),
     path('report_data/',report_data,name="report_data"),
+    path('employee_delete/<str:pk>/',employee_delete,name="employee_delete"),
     ]
 
 if settings.DEBUG:

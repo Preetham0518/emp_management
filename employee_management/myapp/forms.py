@@ -55,7 +55,6 @@ class EmployeeForm(forms.ModelForm):
             'emp_end_date':forms.DateInput(attrs={'type':'date'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'name':forms.TextInput(attrs={'class':'form-control'}),
-            
         }
 
 class SkillForm(forms.ModelForm):

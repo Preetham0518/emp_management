@@ -54,10 +54,10 @@
                                 <td>{{ department.name }}</td>
                                 <td>{{ department.description }}</td>
                                 <td>
-                                    <a href="{%url 'department_update' department.department_id %}" class="btn btn-outline-info">
+                                    <a href="{% url 'department_update' department.department_id %}" class="btn btn-outline-info">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <a href="{%url 'department_view' department.department_id %}" class="btn btn-outline-success">
+                                    <a href="{% url 'department_view' department.department_id %}" class="btn btn-outline-success">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
                                     <button type="button" class="btn btn-outline-danger" data-pk="{{department.department_id}}" data-bs-toggle="modal" data-bs-target="#deleteModal">

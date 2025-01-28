@@ -25,7 +25,7 @@ from .database_query import get_department, get_designation, get_location, get_e
 from datetime import datetime
 from django.utils.dateparse import parse_date
 from django.core.paginator import Paginator
-
+from django.db import transaction
 
 # Create your views here.
 @unauthenticated_user
@@ -229,42 +229,111 @@ def employee_add(request):
         formset = SkillFormSet(queryset=Skill.objects.none())
     return render(request,'employee/employee_add.html',{'form':form,'formset':formset})
 
+
+# def employee_update(request, employee_id):
+#     employee = get_object_or_404(Employee, employee_id=employee_id)
+#     SkillFormSet = modelformset_factory(Skill,form=SkillForm,extra=0)
+
+#     if request.method == 'POST':
+#         form = EmployeeForm(request.POST, request.FILES, instance=employee)
+#         formset = SkillFormSet(request.POST,queryset=Skill.objects.filter(employee=employee))
+        
+#         if form.is_valid() and formset.is_valid():
+#             employee = form.save(commit=False)  
+#             employee.created_by = request.user  
+#             employee.updated_by = request.user
+#             employee = form.save()
+#             for skill_form in formset:
+#                 if skill_form.cleaned_data.get('DELETE',False):
+#                     skill_form.instance.delete()
+#                 else:
+#                     skill = skill_form.save(commit=False)
+#                     skill.employee = employee
+#                     skill.save()
+#             return redirect('employee_list')
+#         else:
+#             if not form.is_valid():
+#                 print("Form Errors:",form.errors)
+#             if not formset.is_valid():
+#                 print("Individual Form Errors:",formset.errors)
+#     else:
+#         form = EmployeeForm(instance=employee)
+#         formset = SkillFormSet(queryset=Skill.objects.filter(employee=employee))
+#     return render(request, 'employee/employee_edit.html', 
+#                   {'form': form,
+#                     'formset':formset,
+#                     'current_department':employee.department_id,
+#                     'current_designation':employee.designation_id,})
 @login_required(login_url='user_login')
 def employee_update(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
-    SkillFormSet = modelformset_factory(Skill,form=SkillForm,extra=0)
-
+    
+    # Configure SkillFormSet with your custom SkillForm
+    SkillFormSet = modelformset_factory(
+        Skill,
+        form=SkillForm,
+        extra=1,
+        can_delete=True,
+        fields=('skill_name', 'description')
+    )
+    
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES, instance=employee)
-        formset = SkillFormSet(request.POST,queryset=Skill.objects.filter(employee=employee))
+        formset = SkillFormSet(
+            request.POST,
+            queryset=Skill.objects.filter(employee=employee),
+            prefix='form'
+        )
         
-        if form.is_valid() and formset.is_valid():
-            employee = form.save(commit=False)  
-            employee.created_by = request.user  
-            employee.updated_by = request.user
-            employee = form.save()
-            for skill_form in formset:
-                if skill_form.cleaned_data.get('DELETE',False):
-                    skill_form.instance.delete()
+        try:
+            with transaction.atomic():
+                if form.is_valid() and formset.is_valid():
+                    # Save employee
+                    employee = form.save(commit=False)
+                    employee.updated_by = request.user
+                    employee.save()
+                    
+                    # Process skills
+                    for skill_form in formset:
+                        if skill_form.cleaned_data:
+                            if skill_form.cleaned_data.get('DELETE', False):
+                                if skill_form.instance.pk:
+                                    skill_form.instance.delete()
+                            else:
+                                skill = skill_form.save(commit=False)
+                                skill.employee = employee
+                                skill.save()
+                    
+                    messages.success(request, 'Employee details updated successfully!')
+                    return redirect('employee_list')
                 else:
-                    skill = skill_form.save(commit=False)
-                    skill.employee = employee
-                    skill.save()
-            return redirect('employee_list')
-        else:
-            if not form.is_valid():
-                print("Form Errors:",form.errors)
-            if not formset.is_valid():
-                print("Individual Form Errors:",formset.errors)
+                    if form.errors:
+                        messages.error(request, 'Please correct the errors in the employee form.')
+                    if formset.errors:
+                        messages.error(request, 'Please correct the errors in the skills form.')
+                    print("Form errors:", form.errors)
+                    print("Formset errors:", formset.errors)
+        
+        except Exception as e:
+            messages.error(request, f'An error occurred while updating: {str(e)}')
+            print("Exception:", str(e))
+    
     else:
         form = EmployeeForm(instance=employee)
-        formset = SkillFormSet(queryset=Skill.objects.filter(employee=employee))
-    return render(request, 'employee/employee_edit.html', 
-                  {'form': form,
-                    'formset':formset,
-                    'current_department':employee.department_id,
-                    'current_designation':employee.designation_id,})
-                                                           
+        formset = SkillFormSet(
+            queryset=Skill.objects.filter(employee=employee),
+            prefix='form'
+        )
+    
+    context = {
+        'form': form,
+        'formset': formset,
+        'current_department': employee.department_id,
+        'current_designation': employee.designation_id,
+        'employee': employee
+    }
+    
+    return render(request, 'employee/employee_edit.html', context)                                                        
                                                            
 
 
@@ -273,6 +342,12 @@ def employee_view(request,pk):
     employee = get_object_or_404(Employee, pk=pk)
     skills = employee.skills.all()
     return render(request,'employee/employee_view.html',{'employee':employee,'skills':skills})
+
+def employee_delete(request,pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    employee.delete()
+    messages.success(request, "Employee deleted Successfully")
+    return redirect('employee_list')
 
 
 @login_required(login_url='user_login')
