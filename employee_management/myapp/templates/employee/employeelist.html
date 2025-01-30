@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <table class="display responsive" id="myTable" style="width: 100%">
+                    <table class="display responsive" id="table1" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Sl. No</th>
@@ -51,7 +51,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {% comment %} <tbody>
                             {% for employee in employees %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
@@ -79,7 +79,7 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                        </tbody>
+                        </tbody> {% endcomment %}
                     </table>
                 </div>
             </div>
@@ -157,6 +157,8 @@
     </form>
 </div>
 
+
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
@@ -197,34 +199,40 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
-
-        if (!$.fn.dataTable.isDataTable('#myTable')) {
-            var table = $("#myTable").DataTable({
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; 
+       
+        if (!$.fn.dataTable.isDataTable('#table1')) {
+            var table = $("#table1").DataTable({
                 "serverSide": true,
                 "paging": true,
                 "ordering": false,
+                "destroy": true, 
                 "pageLength": 10,
                 "ajax": {
                     "url": "/employee_data/",  
-                    "type": "POST",  
+                    "type": "GET",  
                     "dataType": "json",
+                    "dataSrc": "data", 
                     "beforeSend": function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken); // Include CSRF token for security
                     },
-                    "error": function (e) {
-                        $("#myTable tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+                    "error": function (xhr, status, error) {
+                        console.error("Error fetching data:", status, error);
+                        $("#table1 tbody").empty().append('<tr><td colspan="7">ERROR loading data</td></tr>');
                     }
                 },
                 "columns": [
-                    {"sl.no": i + 1}
-                    { "data": "employee_id" },
+                    { 
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            return meta.row + 1 + meta.settings._iDisplayStart; // Auto-increment row number with pagination
+                        }
+                    },
                     { "data": "name" },
                     { "data": "contact" },
-                    { "data": "department_name" },
-                    { "data": "designation_name" },
-                    { "data": "location_name" },
-                
+                    { "data": "department" },
+                    { "data": "designation" },
+                    { "data": "location" },
                     { 
                         "data": "employee_id",
                         "render": function(data, type, row) {
@@ -238,6 +246,12 @@
                                 <button type="button" class="btn btn-outline-danger delete-button" data-pk="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
+                                <a href="/employee_pdf/${data}" class="btn btn-outline-success"> 
+                                    <i class="bi bi-file-earmark-arrow-down fa-lg me-2"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-primary" onclick="showPopup('${data}');">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </button>
                             `;
                         }
                     }
@@ -245,6 +259,12 @@
             });
         }
     });
+
+
 </script>
+
+                    
+            
+
 
 {% endblock %}

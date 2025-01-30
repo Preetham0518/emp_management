@@ -36,7 +36,7 @@ def get_location():
     return[{'location_id':l[0],'name':l[1],'description':l[2]} for l in location]
 
 def get_employees():
-    query = """SELECT e.employee_id, e.name,e.contact,dep.name AS department_name,d.designation_name,
+    query = """SELECT e.employee_id, e.name,e.contact,e.emp_start_date,e.emp_end_date,e.employee_no,e.join_date,e.address,e.status,dep.name AS department_name,d.designation_name,
     l.name AS location_name
     FROM myapp_employee e
     JOIN myapp_department dep ON e.department_id = dep.department_id
@@ -46,7 +46,6 @@ def get_employees():
     with connection.cursor() as cursor:
         cursor.execute(query)
         employee = cursor.fetchall()
-    return[{'employee_id':e[0],'name':e[1],'contact':e[2],'department_name':e[3],'designation_name':e[4],
-            'location_name':e[5]} for e in employee]
+    return[{'employee_id':e[0],'name':e[1],'contact':e[2],'emp_start_date':e[3],'emp_end_date':e[4],'employee_no':e[5],'join_date':e[6],'address':e[7],'status':e[8],'department_name':e[9],'designation_name':e[10],
+            'location_name':e[11]} for e in employee]
     
-

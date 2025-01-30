@@ -28,7 +28,7 @@
                             </a>
                         </div>
                     </div>
-                    <table class="display responsive" id="myTable" style="width: 100%">
+                    <table class="display responsive" id="Table" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Sl. No</th>
@@ -37,7 +37,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {% comment %} <tbody>
                             {% for location in locations %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                             {% endfor %}
-                        </tbody>
+                        </tbody> {% endcomment %}
                     </table>
                 </div>
             </div>
@@ -111,54 +111,68 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
 
-        if (!$.fn.dataTable.isDataTable('#myTable')) {
-            var table = $("#myTable").DataTable({
-                "serverSide": true,
-                "paging": true,
-                "ordering": false,
-                "pageLength": 10,
-                "ajax": {
-                    "url": "/location_data/",  
-                    "type": "POST",  
-                    "dataType": "json",
-                    "beforeSend": function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
-                    },
-                    "error": function (e) {
-                        $("#myTable tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+        // Check if DataTable already exists, destroy it if true
+        if ($.fn.DataTable.isDataTable('#Table')) {
+            $('#Table').DataTable().clear().destroy();
+        }
+        
+
+        // Initialize DataTable with the required settings
+        var table = $("#Table").DataTable({
+            "serverSide": true,
+            "paging": true,
+            "ordering": false,
+            "pageLength": 10,
+            "ajax": {
+                "url": "/location_data/",  // URL for the API endpoint
+                "type": "GET",  // HTTP method
+                "dataType": "json",  // Expected response format
+                "beforeSend": function(xhr) {
+                    if (csrfToken) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);  // Set CSRF token in header
                     }
                 },
-                "columns": [
-                    {"sl.no": i + 1}
-                    { "data": "location_id" },
-                    { "data": "name" },
-                    { "data": "description" },
-                    { 
-                        "data": "location_id",
-                        "render": function(data, type, row) {
-                            return `
-                                <a href="/location_update/${data}" class="btn btn-outline-info">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <a href="/location_view/${data}" class="btn btn-outline-success">
-                                    <i class="bi bi-eye-fill"></i>
-                                </a>
-                                <button type="button" class="btn btn-outline-danger delete-button" data-pk="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            `;
-                        }
+                "error": function (e) {
+                    console.error("Error fetching data:", e.responseText);
+                    $("#Table tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+                }
+            },
+            "columns": [
+                { 
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return meta.row + 1;  // Row number
                     }
-                ]
-            });
-        }
-
-        $("#myTable").on("click", ".delete-button", function () {
+                },
+                { "data": "name" },
+                { "data": "description" },
+                {   
+                    "data": "location_id",
+                    "render": function(data) {
+                        return `
+                            <a href="/location_update/${data}" class="btn btn-outline-info">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="/location_view/${data}" class="btn btn-outline-success">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <button type="button" class="btn btn-outline-danger delete-button" 
+                                    data-pk="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        `;
+                    }
+                }
+            ]
+        });
+        // Handle delete button click
+        $("#Table").on("click", ".delete-button", function () {
             const locationPk = $(this).data("pk");
             document.getElementById("deleteForm").action = `/location_delete/${locationPk}/`;
         });
     });
+    
 </script>
 {% endblock %}

@@ -21,7 +21,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="card-heading">Employee Report List</h5>
 
-                            <form method="GET" action="{% url 'reportlist'%}">
+                            <form id="filterForm" method="GET" action="{% url 'reportlist'%}">
                             <div class="d-flex">
                                 <input type="date" class="form-control me-2" name="start_date" placeholder="start date" value="{{request.GET.start_date}}">
                                 <input  type="date" class="form-control me-2" name="end_date" placeholder="end date(optional)"value="{{request.GET.end_date}}">
@@ -35,7 +35,7 @@
                             </a>
                         </div>
                     </div>
-                    <table class="display responsive" id="myTable" style="width: 100%">
+                    <table class="display responsive" id="table2" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Sl. No</th>
@@ -46,15 +46,16 @@
                                 <th>status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {% comment %} <tbody>
                             {% for employee in report %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ employee.name }}</td>
                                 <td>{{ employee.contact }}</td>
-                                <td>{{employee.department.name}}</td>
-                                <td>{{employee.designation.designation_name}}</td>
-                                <td>{{employee.status}}</td>
+                                <td>{{employee.department_name}}</td>
+                                <td>{{employee.designation_name}}</td>
+                                <td>{{employee.status}}</td> {% endcomment %}
+
                                 {% comment %} <td>
                                     <a href="" class="btn btn-outline-info">
                                         <i class="bi bi-pencil-fill"></i>
@@ -66,8 +67,8 @@
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </td> {% endcomment %}
-                            </tr>
-                            {% endfor %}
+                            {% comment %} </tr>
+                            {% endfor %} {% endcomment %}
                         </tbody>
                     </table>
                 </div>
@@ -75,40 +76,64 @@
         </div>
     </div>
 </section>
+
+
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+        const tableElement = document.getElementById("table2");
+        if (!tableElement) {
+            console.error("Error: Table with ID 'table2' not found.");
+            return;
+        }
 
-        if (!$.fn.dataTable.isDataTable('#myTable')) {
-            var table = $("#myTable").DataTable({
-                "serverSide": true,
-                "paging": true,
-                "ordering": false,
-                "pageLength": 10,
-                "ajax": {
-                    "url": "/report_data/",  
-                    "type": "POST",  
-                    "dataType": "json",
-                    "beforeSend": function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
-                    },
-                    "error": function (e) {
-                        $("#myTable tbody").empty().append('<tr><td colspan="4">ERROR loading data</td></tr>');
+        // Initialize DataTable
+        let table = $("#table2").DataTable({
+            "serverSide": true,
+            "paging": true,
+            "ordering": false,
+            "pageLength": 10,
+            "ajax": {
+                "url": "/report_data/",
+                "type": "GET",
+                "dataType": "json",
+                "dataSrc": "data",
+                "error": function (xhr, status, error) {
+                    console.error("Error fetching data:", status, error);
+                    $("#table2 tbody").html('<tr><td colspan="6">ERROR loading data</td></tr>');
+                },
+                "data": function (d) {
+                    // Add start_date and end_date to the AJAX request
+                    d.start_date = document.querySelector('input[name="start_date"]').value;
+                    d.end_date = document.querySelector('input[name="end_date"]').value;
+                }
+            },
+            "columns": [
+                { 
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return meta.row + 1 + meta.settings._iDisplayStart;
                     }
                 },
-                "columns": [
-                    {"sl.no": i + 1}
-                    { "data": "employee_id" },
-                    { "data": "name" },
-                    { "data": "contact" },
-                    { "data": "department_name" },
-                    { "data": "designation_name" },
-                    { "data": "location_name" },
-                    {"data": "status"},
-                ]
+                { "data": "name" },
+                { "data": "contact" },
+                { "data": "department_name" },
+                { "data": "designation_name" },
+                { "data": "status" }
+            ]
+        });
+
+        // Attach event listener to the FORM (not the button)
+        const filterForm = document.getElementById("filterForm");
+        if (filterForm) {
+            filterForm.addEventListener("submit", function (e) {
+                e.preventDefault(); // Prevent default form submission
+                table.ajax.reload(); // Reload DataTable with new filters
             });
+        } else {
+            console.error("Error: Filter form not found.");
         }
     });
 </script>
-
 {%endblock%}
+

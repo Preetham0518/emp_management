@@ -399,23 +399,36 @@ def userlist_update(request,pk):
 def Download(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    report = Employee.objects.all()
+    report = get_employees()
     
     if start_date:
-        start_date = parse_date(start_date)
-        report = report.filter(emp_start_date__gte = start_date)
-        
+        filter_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        report = [emp for emp in report if emp['emp_start_date'] and emp['emp_start_date'] >= filter_start_date]
+
+    # Apply end_date filter if provided, or include employees with no end_date
     if end_date:
-        end_date = parse_date(end_date)
-        report = report.filter(emp_end_date__lte = end_date)
+        filter_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        report = [emp for emp in report if emp['emp_end_date'] and emp['emp_end_date'] <= filter_end_date]
     else:
-        report = report.filter(emp_end_date__isnull = True)
-   
+        report = [emp for emp in report if emp['emp_end_date'] is None]
     
-    report_values = report.values(
-        'employee_id','join_date','employee_no','name','contact','address',
-        'emp_start_date','emp_end_date','status','department__name','designation__designation_name','location__name'
-    )
+        report_values = [
+        {
+            'employee_id': emp.get('employee_id'),
+            'name': emp.get('name'),
+            'contact': emp.get('contact'),
+            'emp_start_date': emp.get('emp_start_date'),
+            'emp_end_date': emp.get('emp_end_date'),
+            'employee_no': emp.get('employee_no'),
+            'join_date': emp.get('join_date'),
+            'address': emp.get('address'),
+            'status': emp.get('status'),
+            'department_name': emp.get('department_name'), 
+            'designation_name': emp.get('designation_name'),  
+            'location_name': emp.get('location_name')  
+        }
+        for emp in report
+    ]
     df = pd.DataFrame(list(report_values))
     
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -427,20 +440,19 @@ def Download(request):
 
 @login_required(login_url='user_login')
 def reportlist(request):
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-    report = Employee.objects.all()
-    
-    
+    start_date = (request.GET.get('start_date'))
+    end_date = (request.GET.get('end_date'))
+    report = get_employees()
+
     if start_date:
-        report = report.filter(emp_start_date__gte = start_date)
-        
+        report = [emp for emp in report if emp.get('start_date') and emp['start_date'] >= start_date]
+    
     if end_date:
-        report = report.filter(emp_end_date__lte = end_date)
+        report = [emp for emp in report if emp.get('end_date') and emp['end_date'] <= end_date]
     else:
-        report = report.filter(emp_end_date__isnull = True)
-   
-    return render(request,'reports/reportlist.html',{'report':report})
+        report = [emp for emp in report if emp.get('end_date') is None]
+
+    return render(request, 'reports/reportlist.html', {'report': report})
 
 
 
@@ -800,222 +812,273 @@ def load_designations(request):
 
 
 def department_data(request):
-    if request.method == "POST":
-        
-        start_index = int(request.POST.get('start', 0))
-        page_length = int(request.POST.get('length', 10))
-        search_value = request.POST.get('search[value]', '').strip()
-        draw = int(request.POST.get('draw', 1))
+    start_index = int(request.GET.get('start', 0))
+    page_length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '').strip()
+    draw = int(request.GET.get('draw', 1))
 
-        
-        departments = Department.objects.all()
-        if search_value:
-            departments = departments.filter(name__icontains=search_value)
+    departments = get_department()  # This should return a QuerySet or List
 
-        
-        total_records = Department.objects.count()
+    total_records = len(departments)
 
-       
-        filtered_records = departments.count()
 
-       
-        departments = departments[start_index:start_index + page_length]
+    if search_value:
+        departments = [dept for dept in departments if search_value.lower() in dept['name'].lower()]
 
-        
-        data = [
-            {
-                'department_id': department.department_id,
-                'name': department.name,
-                'description': department.description,
-            }
-            for department in departments
-        ]
+    filtered_records = len(departments)
 
-        #
-        response = {
-            'draw': draw,  
-            'recordsTotal': total_records,  
-            'recordsFiltered': filtered_records,  
-            'data': data, 
+    # Apply pagination
+    departments = departments[start_index:start_index + page_length]
+
+    # Format response data
+    data = [
+        {
+            'department_id': department['department_id'],
+            'name': department['name'],
+            'description': department['description'],
         }
+        for department in departments
+    ]
 
-        return JsonResponse(response)
+    response = {
+        'draw': draw,  
+        'recordsTotal': total_records,  
+        'recordsFiltered': filtered_records,  
+        'data': data,  
+    }
 
-    return JsonResponse({"error": "Invalid request method"}, status=400)
-    
+    return JsonResponse(response)
 
 def designation_data(request):
-    if request.method == "POST":
-        
-        start_index = int(request.POST.get('start', 0))
-        page_length = int(request.POST.get('length', 10))
-        search_value = request.POST.get('search[value]', '').strip()
-        draw = int(request.POST.get('draw', 1))
-
-        
-        designations = Designation.objects.all()
-        if search_value:
-            designations = designations.filter(name__icontains=search_value)
-
-        
-        total_records = Designation.objects.count()
+    start_index = int(request.GET.get('start', 0))
+    page_length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '').strip()
+    draw = int(request.GET.get('draw', 1))
+    
+    designations = get_designation()
+    
+    if search_value:
+        designations = [d for d in designations if search_value.lower() in d['designation_name'].lower()]
 
        
-        filtered_records = designations.count()
+    total_records = len(designations)
 
        
-        designations = designations[start_index:start_index + page_length]
+    designations = designations[start_index:start_index + page_length]
+        
+    filtered_records = len(designations)
 
         
-        data = [
+    data = [
             {
-                'designation_id': designation.designation_id,
-                'designation_name': designation.designation_name,
-                'designation_description': designation.designation_description,
+                'designation_id': designation['designation_id'],
+                'designation_name': designation['designation_name'],
+                'designation_description': designation['designation_description'],
             }
             for designation in designations
         ]
 
         #
-        response = {
-            'draw': draw,  
-            'recordsTotal': total_records,  
+    response = {
+            'draw': draw,   
+            'recordsTotal': total_records,
             'recordsFiltered': filtered_records,  
             'data': data, 
         }
 
-        return JsonResponse(response)
+    return JsonResponse(response)
 
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
 
 def location_data(request):
-    if request.method == "POST":
-        
-        start_index = int(request.POST.get('start', 0))
-        page_length = int(request.POST.get('length', 10))
-        search_value = request.POST.get('search[value]', '').strip()
-        draw = int(request.POST.get('draw', 1))
+    start_index = int(request.GET.get('start', 0))
+    page_length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '').strip()
+    draw = int(request.GET.get('draw', 1))
+    locations = get_location()
+    if search_value:
+        locations = [loc for loc in locations if search_value.lower() in loc['name'].lower()]
 
         
-        locations = Location.objects.all()
-        if search_value:
-            locations = locations.filter(name__icontains=search_value)
-
-        
-        total_records = Location.objects.count()
+    total_records = len(locations)
 
        
-        filtered_records = locations.count()
+    filtered_records = len(locations)
 
        
-        locations = locations[start_index:start_index + page_length]
+    locations = locations[start_index:start_index + page_length]
 
         
-        data = [
+    data = [
             {
-                'location_id': locations.location_id,
-                'name': locations.name,
-                'description': locations.description,
+                'location_id': locations['location_id'],
+                'name': locations['name'],
+                'description': locations['description'],
             }
             for locations in locations
         ]
 
         #
-        response = {
+    response = {
             'draw': draw,  
             'recordsTotal': total_records,  
             'recordsFiltered': filtered_records,  
             'data': data, 
         }
 
-        return JsonResponse(response)
-
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+    return JsonResponse(response)
 
 def employee_data(request):
-    if request.method == "POST":
-        start_index = int(request.POST.get('start', 0))
-        page_length = int(request.POST.get('length', 10))
-        search_value = request.POST.get('search[value]', '').strip()
-        draw = int(request.POST.get('draw', 1))
+    start_index = int(request.GET.get('start', 0))
+    page_length = int(request.GET.get('length', 10))
+    search_value = request.GET.get('search[value]', '').strip()
+    draw = int(request.GET.get('draw', 1))
 
         
-        employees = Employee.objects.all()
-        if search_value:
-            employees = employees.filter(name__icontains=search_value)
+    employees = get_employees()
+    if search_value:
+        employees = [emp for emp in employees if search_value.lower() in emp['name'].lower()]
 
         
-        total_records = Employee.objects.count()
+    total_records = len(employees)
 
        
-        filtered_records = employees.count()
-
+    filtered_records = len(employees)
        
-        employees = employees[start_index:start_index + page_length]
+    employees = employees[start_index:start_index + page_length]
 
         
-        data = [
-            {
-                'employee_id': employees.employee_id,
-                'name': employees.name,
-                'contact': employees.contact,
-                'department': employees.department.name,
-                'designation': employees.designation.designation_name,
-                'location': employees.location.name,
-            }
-            for employees in employees
+    data = [
+        {
+            'employee_id': employee['employee_id'],  
+            'name': employee['name'],
+            'contact': employee['contact'],
+            'department': employee.get('department_name', 'No Department'),
+            'designation': employee.get('designation_name','No Designation'),
+            'location': employee.get('location_name','No Location'),
+        }
+            for employee in employees
         ]
 
         #
-        response = {
+    response = {
             'draw': draw,  
             'recordsTotal': total_records,  
             'recordsFiltered': filtered_records,  
             'data': data, 
         }
 
-        return JsonResponse(response)
+    return JsonResponse(response)
 
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+# def report_data(request):
+#     start_index = int(request.GET.get('start', 0))  
+#     page_length = int(request.GET.get('length', 10))  
+#     search_value = request.GET.get('search[value]', '').strip()  
+#     draw = int(request.GET.get('draw', 1))
+   
+#     report = get_employees()
+    
+    
+#     if search_value:
+#         report = [emp for emp in report if search_value.lower() in emp["name"].lower()]
+
+
+#     total_records = len(report)
+#     filtered_records = len(report)
+#     report = report[start_index:start_index + page_length]
+    
+#     data = [
+#         {
+#             'name': emp['name'],
+#             'contact': emp['contact'],
+#             'department_name': emp.get('department_name'),
+#             'designation_name': emp.get('designation_name'),
+#             'status': emp.get("status", "active"),
+#         }
+#         for emp in report
+#     ]
+
+#     response = {
+#         'draw': draw,  
+#         'recordsTotal': total_records,  
+#         'recordsFiltered': filtered_records, 
+#         'data': data,  
+#     }
+
+#     return JsonResponse(response)
+
 
 
 def report_data(request):
-    if request.method == "POST":
-        start_index = int(request.POST.get('start', 0))  
-        page_length = int(request.POST.get('length', 10))  
-        search_value = request.POST.get('search[value]', '').strip()  
-        draw = int(request.POST.get('draw', 1))  
+    start_index = int(request.GET.get('start', 0))  
+    page_length = int(request.GET.get('length', 10))  
+    search_value = request.GET.get('search[value]', '').strip()  
+    draw = int(request.GET.get('draw', 1)) 
 
-        
-        report = Employee.objects.all()
+    
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-        if search_value:
-            report = report.filter(name__icontains=search_value)  
+   
+    report = get_employees()
 
-        total_records = Employee.objects.count()
-        filtered_records = report.count()
-        report = report[start_index:start_index + page_length] 
+    for emp in report:
+        # If emp_start_date is a string, convert it to a date
+        if emp['emp_start_date'] and isinstance(emp['emp_start_date'], str):
+            emp['emp_start_date'] = datetime.strptime(emp['emp_start_date'], '%Y-%m-%d').date()
 
-        data = [
-            {
-                'employee_id': emp.employee_id,
-                'name': emp.name,
-                'contact': emp.contact,
-                'department_name': emp.department.name ,
-                'designation_name': emp.designation.name,
-                'location_name': emp.location.name,
-                'status': emp.status,
-            }
-            for emp in report
-        ]
+        # If emp_end_date is a string, convert it to a date
+        if emp['emp_end_date'] and isinstance(emp['emp_end_date'], str):
+            emp['emp_end_date'] = datetime.strptime(emp['emp_end_date'], '%Y-%m-%d').date()
 
-        response = {
-            'draw': draw,  
-            'recordsTotal': total_records,  
-            'recordsFiltered': filtered_records, 
-            'data': data,  
+    # Apply start_date filter if provided
+    if start_date:
+        filter_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        report = [emp for emp in report if emp['emp_start_date'] and emp['emp_start_date'] >= filter_start_date]
+
+    # Apply end_date filter if provided, or include employees with no end_date
+    if end_date:
+        filter_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        report = [emp for emp in report if emp['emp_end_date'] and emp['emp_end_date'] <= filter_end_date]
+    else:
+        report = [emp for emp in report if emp['emp_end_date'] is None]
+
+
+    if search_value:
+        report = [emp for emp in report if search_value.lower() in emp["name"].lower()]
+
+    total_records = len(report)
+
+    report = report[start_index:start_index + page_length]
+    data = [
+        {
+            'name': emp['name'],
+            'contact': emp['contact'],
+            'department_name': emp.get('department_name'),
+            'designation_name': emp.get('designation_name'),
+            'status': emp.get("status", "active"),
+            'emp_start_date': emp['emp_start_date'].strftime('%Y-%m-%d') if emp['emp_start_date'] else None,
+            'emp_end_date': emp['emp_end_date'].strftime('%Y-%m-%d') if emp['emp_end_date'] else None
         }
+        for emp in report
+    ]
 
-        return JsonResponse(response)
+    response = {
+        'draw': draw,
+        'recordsTotal': total_records,  
+        'recordsFiltered': len(report),  
+        'data': data,  
+    }
 
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+    return JsonResponse(response)
+
+
+
+
+
+
+
+
