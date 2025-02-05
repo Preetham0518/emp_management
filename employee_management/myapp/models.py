@@ -72,3 +72,119 @@ class Skill(TimeStampedModel):
         return self.skill_name
 
 
+
+
+
+class a2_general_organization_details_header(models.Model):
+    general_organization_details_header_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    modified_date = models.DateTimeField(null=True, blank=True)
+
+    description_document_avaliable_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+
+    organization_description_document_avaliable = models.CharField(max_length=10, null=True, blank=True,
+                                                                   choices=description_document_avaliable_CHOICES,
+                                                                   default='')
+    organization_description_document_file = models.FileField(null=True, blank=True, upload_to='audit_files')
+    independant_quality_assurance_department_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_there_an_independant_quality_assurance_department = models.CharField(max_length=10, null=True, blank=True,
+                                                                            choices=independant_quality_assurance_department_CHOICES,
+                                                                            default='')
+    production_planned_systamatically_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_production_planned_systamatically = models.CharField(max_length=10, null=True, blank=True,
+                                                            choices=production_planned_systamatically_CHOICES,
+                                                            default='')
+
+    production_plan_details = models.CharField(max_length=500, null=True, blank=True)
+    production_planning_and_control_system_CHOICES = (
+        ('Work Procedure', 'Work Procedure'),
+        ('Index Cards', 'Index Cards'),
+
+    )
+    production_planning_and_control_system = models.CharField(max_length=100, null=True, blank=True,
+                                                              choices=production_planning_and_control_system_CHOICES,
+                                                              default='')
+    is_delivery_timed_planned_and_monitored_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_delivery_timed_planned_and_monitored = models.CharField(max_length=10, null=True, blank=True,
+                                                               choices=is_delivery_timed_planned_and_monitored_CHOICES,
+                                                               default='')
+    is_inform_customer_of_delay_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_inform_customer_of_delay = models.CharField(max_length=10, null=True, blank=True,
+                                                   choices=is_inform_customer_of_delay_CHOICES, default='')
+    is_work_instruction_for_production_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_work_instruction_for_production = models.CharField(max_length=10, null=True, blank=True,
+                                                          choices=is_work_instruction_for_production_CHOICES,
+                                                          default='')
+    is_work_instruction_for_in_process_inspection_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_work_instruction_for_in_process_inspection = models.CharField(max_length=10, null=True, blank=True,
+                                                                     choices=is_work_instruction_for_in_process_inspection_CHOICES,
+                                                                     default='')
+    is_work_instruction_for_final_inspection_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_work_instruction_for_final_inspection = models.CharField(max_length=10, null=True, blank=True,
+                                                                choices=is_work_instruction_for_final_inspection_CHOICES,
+                                                                default='')
+    is_work_instruction_for_outgoing_goods_inspection_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_work_instruction_for_outgoing_goods_inspection = models.CharField(max_length=10, null=True, blank=True,
+                                                                         choices=is_work_instruction_for_outgoing_goods_inspection_CHOICES,
+                                                                         default='')
+    is_inspection_work_result_documented_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    is_inspection_work_result_documented = models.CharField(max_length=10, null=True, blank=True,
+                                                            choices=is_inspection_work_result_documented_CHOICES,
+                                                            default='')
+    one_time_delivery_compalince_last_or_current_year_percentage = models.CharField(max_length=50, null=True,
+                                                                                    blank=True)
+    implemented_procedure_for_ensuring_non_conforming_products = models.CharField(max_length=50, null=True, blank=True)
+    written_work_instructions_CHOICES = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+
+    )
+    written_work_instructions_for_the_production_processes = models.CharField(max_length=5, null=True, blank=True,
+                                                                              choices=written_work_instructions_CHOICES,
+                                                                              default='')
+    sendto_buyer_date = models.DateTimeField(null=True, blank=True)
+    filled_personname = models.CharField(max_length=50, null=True, blank=True)
+    filled_persondesignation = models.CharField(max_length=50, null=True, blank=True)
+    filled_personsignature = models.FileField(null=True, blank=True, upload_to='signature_docs')
+    
+    

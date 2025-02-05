@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Department, Designation, Location, Employee, Skill
+from .models import Department, Designation, Location, Employee, Skill, a2_general_organization_details_header
 from django.forms import modelformset_factory
 
 
@@ -83,3 +83,113 @@ SkillFormSet = modelformset_factory(
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+    
+
+class GeneralOrganizationForm(forms.ModelForm):
+    class Meta:
+        model = a2_general_organization_details_header
+        fields = [
+            'organization_description_document_avaliable',
+            'is_there_an_independant_quality_assurance_department',
+            'is_production_planned_systamatically',
+            'is_delivery_timed_planned_and_monitored',
+            'production_planning_and_control_system',
+            'is_inform_customer_of_delay',
+            'is_work_instruction_for_production',
+            'is_work_instruction_for_in_process_inspection',
+            'is_work_instruction_for_final_inspection',
+            'is_work_instruction_for_outgoing_goods_inspection',
+            'is_inspection_work_result_documented',
+            'one_time_delivery_compalince_last_or_current_year_percentage',
+            'implemented_procedure_for_ensuring_non_conforming_products',
+            'filled_personname',
+            'filled_persondesignation',
+            'filled_personsignature',
+            'sendto_buyer_date',
+        ]
+
+    organization_description_document_avaliable = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')], 
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_there_an_independant_quality_assurance_department = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_production_planned_systamatically = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_delivery_timed_planned_and_monitored = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    production_planning_and_control_system = forms.ChoiceField(
+        choices=[('Work Procedure', 'Work Procedure'), ('Index Cards', 'Index Cards')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_inform_customer_of_delay = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_work_instruction_for_production = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_work_instruction_for_in_process_inspection = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_work_instruction_for_final_inspection = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_work_instruction_for_outgoing_goods_inspection = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    is_inspection_work_result_documented = forms.ChoiceField(
+        choices=[('Yes', 'Yes'), ('No', 'No')],
+        widget=forms.RadioSelect,
+        required=True
+    )
+    one_time_delivery_compalince_last_or_current_year_percentage = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 1,
+            'class': 'form-control',
+        }),
+        required=True
+    )
+    implemented_procedure_for_ensuring_non_conforming_products = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 1,
+            'class': 'form-control',
+        }),
+        required=True
+    )
+    filled_personname = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    filled_persondesignation = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    filled_personsignature = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        required=False
+    )
+    sendto_buyer_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        required=True
+    )

@@ -1,7 +1,7 @@
 import pandas as pd
 from django.shortcuts import render, redirect
-from .models import Department, Designation , Location , Employee, Skill
-from .forms import DepartmentForm, DesignationForm , LocationForm, EmployeeForm,SkillForm,CreateUserForm, UploadFileForm
+from .models import Department, Designation , Location , Employee, Skill,a2_general_organization_details_header
+from .forms import DepartmentForm, DesignationForm , LocationForm, EmployeeForm,SkillForm,CreateUserForm, GeneralOrganizationForm
 from django.shortcuts import get_object_or_404
 from .forms import SkillFormSet
 from django.forms import modelformset_factory
@@ -1078,7 +1078,35 @@ def report_data(request):
 
 
 
+def generalOrganization_list(request):
+    generals = a2_general_organization_details_header.objects.all()
+    return render(request, 'generalOrganization/a2list.html',{'generals':generals})
+
+def generalOrganization_add(request):
+    if request.method == 'POST':
+        form = GeneralOrganizationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('generalOrganization_list')
+    else:
+         form = GeneralOrganizationForm()
+    return render(request, 'generalOrganization/a2_add.html', {'form': form})
+        
+        
+def generalOrganization_update(request,pk):
+    organization = get_object_or_404(a2_general_organization_details_header, pk=pk)
+
+    if request.method == "POST":
+        form = GeneralOrganizationForm(request.POST, instance=organization)
+        if form.is_valid():
+            form.save()
+            return redirect('generalOrganization_list')
+    else:
+        form = GeneralOrganizationForm(instance=organization)
+    return render(request, 'generalOrganization/a2_edit.html', {'form': form})
 
 
-
-
+# def generalOrganization_pdf(request):
+    
+    
+    

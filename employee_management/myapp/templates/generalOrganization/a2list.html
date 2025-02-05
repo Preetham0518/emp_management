@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}General Organization Details{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="heading">KSB MIL Controls Limited</h1>
+    
+    <a href="{% url 'generalOrganization_add' %}" class="btn btn-primary">Add</a>
+    {% comment %} <a href="{% url 'create_pdf'%}" class="btn btn-success">Download pdf</a> {% endcomment %}
+    
+    <hr>
+
+    {% for general in generals %}
+      <div class="question">
+        <p>1. Is there any document available, which describes your organisation?</p>
+        <ul>
+          <ul>{% if general.organization_description_document_available == "Yes" %} Yes {% else %} No {% endif %}</ul>
+        </ul>
+
+        <p>2. Is there an independent Quality Assurance department?</p>
+        <ul>
+          <ul>{% if general.independent_quality_assurance == "Yes" %} Yes {% else %} No {% endif %}</ul>
+        </ul>
+
+        <p>3. Production Planning:</p>
+        <ul>
+          <ul>a. Is production planned systematically?</ul>
+          <ul>{% if general.production_planned == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>If so, by which means?</ul>
+          <ul>b. Are the delivery times planned and continually monitored?</ul>
+          <ul>{% if general.is_delivery_timed_planned_and_monitored == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>c. Production planning and control system</ul>
+          <ul>{% if general.production_planning_and_control_system == "Work Procedure" %} Work Procedure {% else %} Index Cards{% endif %}</ul>
+          <ul>b. Are the delivery times planned and continually monitored?</ul>
+          <ul>{% if general.is_delivery_timed_planned_and_monitored == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>c. Do you inform the customer of delays?</ul>
+          <ul>{% if general.is_inform_customer_of_delay == "Yes" %} Yes {% else %} No {% endif %}</ul>
+        </ul>
+
+        <p>4. Instructions:</p>
+        <ul>
+          <ul>a. Are there written work instructions for the production processes?</ul>
+          <ul>{% if general.is_work_instruction_for_production == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul> For production</ul>
+          <ul>{% if general.is_work_instruction_for_production == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul> For in-process inspection</ul>
+          <ul>{% if general.is_work_instruction_for_in_process_inspection == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul> For final inspection</ul>
+          <ul>{% if general.is_work_instruction_for_final_inspection == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul> For outgoing goods inspection</ul>
+          <ul>{% if general.is_work_instruction_for_outgoing_goods_inspection == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>b. Are the inspection/ work results documented?</ul>
+          <ul>{% if general.is_inspection_work_result_documented == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          
+        </ul>
+
+        <p>5. Information on the business process:</p>
+        <ul>
+          <ul>a. On-Time delivery/delivery compliance for last or current business year (%)</ul>
+          <ul>{{ general.one_time_delivery_compalince_last_or_current_year_percentage }}</ul>
+          <ul>b. Have you implemented a procedure which ensures that non-conforming products and/or services will be segregated?</ul>
+          <ul>{{ general.implemented_procedure_for_ensuring_non_conforming_products }}</ul>
+        </ul>
+      </div>
+      
+      <hr>
+
+      <div class="supplier-signature">
+        <h3>For Supplier</h3>
+        <p>For KSB MIL Controls Ltd</p>
+        <p><strong>Name:{{general.filled_personname}}</p>
+        <p><strong>Designation:{{general.filled_persondesignation}}</p>
+        <p><strong>Signature:{{general.filled_personsignature}}</p>
+        <p><strong>Date:{{general.sendto_buyer_date}}</p>
+      </div>
+      <div class="actions">
+        <a href="{% url 'generalOrganization_update' pk=general.general_organization_details_header_id %}" class="btn btn-secondary">Edit</a>
+
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
