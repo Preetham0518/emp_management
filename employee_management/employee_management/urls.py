@@ -68,7 +68,8 @@ urlpatterns = [
     path('employee_delete/<str:pk>/',employee_delete,name="employee_delete"),
     path('generalOrganization/',generalOrganization_list,name="generalOrganization_list"),
     path('generalOrganization_add/',generalOrganization_add,name="generalOrganization_add"),
-    path('generalOrganization_update/<str:pk>/',generalOrganization_update,name="generalOrganization_update"),
+    path('generalOrganization_update/<uuid:pk>/',generalOrganization_update,name="generalOrganization_update"),
+    path('generalOrganization_pdf/<uuid:pk>/',generalOrganization_pdf,name="generalOrganization_pdf"),
     ]
 
 if settings.DEBUG:

@@ -9,26 +9,26 @@
     <h1 class="heading">KSB MIL Controls Limited</h1>
     
     <a href="{% url 'generalOrganization_add' %}" class="btn btn-primary">Add</a>
-    {% comment %} <a href="{% url 'create_pdf'%}" class="btn btn-success">Download pdf</a> {% endcomment %}
     
     <hr>
+    <div id="pdf-element">
 
     {% for general in generals %}
       <div class="question">
         <p>1. Is there any document available, which describes your organisation?</p>
         <ul>
-          <ul>{% if general.organization_description_document_available == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>{% if general.organization_description_document_avaliable == "Yes" %} Yes {% else %} No {% endif %}</ul>
         </ul>
 
         <p>2. Is there an independent Quality Assurance department?</p>
         <ul>
-          <ul>{% if general.independent_quality_assurance == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>{% if general.is_there_an_independant_quality_assurance_department == "Yes" %} Yes {% else %} No {% endif %}</ul>
         </ul>
 
         <p>3. Production Planning:</p>
         <ul>
           <ul>a. Is production planned systematically?</ul>
-          <ul>{% if general.production_planned == "Yes" %} Yes {% else %} No {% endif %}</ul>
+          <ul>{% if general.is_production_planned_systamatically == "Yes" %} Yes {% else %} No {% endif %}</ul>
           <ul>If so, by which means?</ul>
           <ul>b. Are the delivery times planned and continually monitored?</ul>
           <ul>{% if general.is_delivery_timed_planned_and_monitored == "Yes" %} Yes {% else %} No {% endif %}</ul>
@@ -78,8 +78,34 @@
       </div>
       <div class="actions">
         <a href="{% url 'generalOrganization_update' pk=general.general_organization_details_header_id %}" class="btn btn-secondary">Edit</a>
-
+        <a href="{% url 'generalOrganization_pdf' pk=general.general_organization_details_header_id %}" class="btn btn-success">Download pdf</a>
+        {% comment %} <button onclick="downloadpdf()" class="btn btn-danger">Download PDF (JS)</button> {% endcomment %}
       </div>
     {% endfor %}
   </div>
+</div>
+
+{% comment %} <script>
+  function downloadpdf() {
+      let element = document.getElementById("pdf-element");
+
+      html2pdf(element, {
+          filename: "A2-General_Organization.pdf",
+          margin: 10,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+              scale: 2,
+              logging: true,
+              dpi: 192,
+              letterRendering: true,
+          },
+          jsPDF: {
+              unit: "mm",
+              format: "a4",
+              orientation: "portrait",
+          },
+      });
+  }
+</script> {% endcomment %}
+
 {% endblock %}

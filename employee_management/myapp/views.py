@@ -1101,12 +1101,153 @@ def generalOrganization_update(request,pk):
         if form.is_valid():
             form.save()
             return redirect('generalOrganization_list')
+        else:
+            print(form.errors)
     else:
         form = GeneralOrganizationForm(instance=organization)
     return render(request, 'generalOrganization/a2_edit.html', {'form': form})
 
 
-# def generalOrganization_pdf(request):
+
+
+def generalOrganization_pdf(request, pk):
+    organization = get_object_or_404(a2_general_organization_details_header, general_organization_details_header_id=pk)
     
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="A2-General_Organization.pdf"'
     
+    p = canvas.Canvas(response)
+    page_width, page_height = p._pagesize
+    y_position = page_height - 50
     
+    logo_path = "myapp/static/new_assets/images/logo.png"
+    logo_width, logo_height = 100, 50
+    x_position = page_width - logo_width - 20 
+    p.drawImage(logo_path, x_position, page_height - logo_height - 20, width=logo_width, height=logo_height)
+
+    STANDARD_SPACING = 30
+
+    def check_new_page(needed_space):
+        nonlocal y_position
+        if y_position - needed_space < 50:
+            p.showPage()
+            p.setFont("Helvetica", 11)
+            y_position = page_height - 50
+            return True
+        return False
+
+    # Title
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y_position, "KSB MIL Controls Limited")
+    y_position -= STANDARD_SPACING
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(50, y_position, "Part A2:General Organization")
+    y_position -= STANDARD_SPACING
+
+    def draw_radio_button(x, y, selected):
+        p.setStrokeColorRGB(0, 0, 0)
+        p.setFillColorRGB(1, 1, 1)
+        p.circle(x, y, 5, fill=0)
+        p.circle(x + 40, y, 5, fill=0)
+
+        if selected == "Yes":
+            p.setFillColorRGB(0, 0, 0)
+            p.circle(x, y, 3, fill=1)
+        elif selected == "No":
+            p.setFillColorRGB(0, 0, 0)
+            p.circle(x + 40, y, 3, fill=1)
+
+        p.setFillColorRGB(0, 0, 0)
+        p.drawString(x + 10, y - 3, "Yes")
+        p.drawString(x + 50, y - 3, "No")
+
+    # Updated questions list with is_main_question attribute
+    questions = [
+        ("1. Is there any document available describing your organization?", organization.organization_description_document_avaliable, True),
+        ("2. Is there an independent Quality Assurance department?", organization.is_there_an_independant_quality_assurance_department, True),
+        ("3. Production Planning:", None, True),
+        ("    a. Is production planned systematically?", organization.is_production_planned_systamatically, False),
+        ("    b. Are delivery times planned and monitored?", organization.is_delivery_timed_planned_and_monitored, False),
+        ("    c. Do you inform the customer of delays?", organization.is_inform_customer_of_delay, False),
+        ("    d. Production planning and control system?", organization.production_planning_and_control_system, False),
+        ("4. Instructions:", None, True),
+        ("    a. Are there written work instructions for the production processes?", organization.is_work_instruction_for_production, False),
+        ("    - For Production", organization.is_work_instruction_for_production, False),
+        ("    - For in-process inspection", organization.is_work_instruction_for_in_process_inspection, False),
+        ("    - For final inspection", organization.is_work_instruction_for_final_inspection, False),
+        ("    - For outgoing goods inspection", organization.is_work_instruction_for_outgoing_goods_inspection, False),
+        ("    b. Are the inspection/work results documented?", organization.is_inspection_work_result_documented, False),
+    ]
+
+    sub_instructions = {
+        "    - For Production",
+        "    - For in-process inspection",
+        "    - For final inspection",
+        "    - For outgoing goods inspection"
+    }
+
+    for question, answer, is_main_question in questions:
+        check_new_page(STANDARD_SPACING)
+        
+        # Set appropriate font based on question type
+        if is_main_question:
+            p.setFont("Helvetica-Bold", 11)
+        else:
+            p.setFont("Helvetica", 11)
+        
+        # Draw the question
+        p.drawString(50, y_position, question)
+        
+        if answer is not None:
+            is_sub_instruction = question in sub_instructions
+            if is_sub_instruction:
+                draw_radio_button(350, y_position, answer)
+                y_position -= STANDARD_SPACING
+            else:
+                y_position -= 15
+                draw_radio_button(70, y_position, answer)
+                y_position -= STANDARD_SPACING
+        else:
+            y_position -= STANDARD_SPACING
+
+    # 5th Question
+    check_new_page(STANDARD_SPACING * 3)
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(50, y_position, "5. Information on the business process:")
+    y_position -= STANDARD_SPACING
+
+    p.setFont("Helvetica", 11)
+    p.drawString(70, y_position, f"a. On-Time delivery compliance for last or current business year (%): {organization.one_time_delivery_compalince_last_or_current_year_percentage}")
+    y_position -= STANDARD_SPACING
+
+    p.drawString(70, y_position, f"b. Have you implemented a procedure for handling non-conforming products: {organization.implemented_procedure_for_ensuring_non_conforming_products}")
+    y_position -= STANDARD_SPACING
+
+    # Supplier Information
+    check_new_page(STANDARD_SPACING * 5)
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y_position, "For Supplier:")
+    y_position -= STANDARD_SPACING
+
+    p.setFont("Helvetica", 11)
+    supplier_info = [
+        (f"Name: {organization.filled_personname}"),
+        (f"Designation: {organization.filled_persondesignation}"),
+        (f"Signature: {organization.filled_personsignature}"),
+        (f"Date: {organization.sendto_buyer_date}"),
+    ]
+
+    for info in supplier_info:
+        if check_new_page(STANDARD_SPACING):
+            p.setFont("Helvetica-Bold", 12)
+            p.drawString(50, y_position, "For Supplier (continued):")
+            y_position -= STANDARD_SPACING
+            p.setFont("Helvetica", 11)
+        p.drawString(70, y_position, info)
+        y_position -= STANDARD_SPACING
+
+    p.showPage()
+    p.save()
+    
+    return response
