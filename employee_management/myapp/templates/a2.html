@@ -1,20 +1,24 @@
-{%load static%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{% block title %}KSB{% endblock %}</title>
+    <title>KSB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Bootstrap CSS -->
-    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
-    
+    <!-- App css -->
+    <link
+      href="../assets/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+      id="app-style"
+    />
     <style>
-      /* Global Styles */
       .table {
         margin: 0 !important;
       }
-      td, th {
+
+      td,
+      th,
+      td {
         border: 1px solid #000000;
         font-size: 12px !important;
       }
@@ -22,44 +26,63 @@
         border: 2px solid black !important;
         height: 1023px !important;
       }
+
       * {
+        /* font-size: 9px; */
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 1 !important;
         color: black !important;
       }
+
       .address-width {
         width: 210px !important;
       }
+
       .bd-none {
         border-right: 2px solid #000000 !important;
         border-top: none !important;
         border-left: 2px solid #000000 !important;
         border-bottom: none !important;
       }
+
       .bd-none-fst {
         border-right: 2px solid #000000 !important;
         border-top: none !important;
         border-left: 2px solid #000000 !important;
         border-bottom: none !important;
       }
+
       .bd-none-fst-end {
         border-top: 2px solid #000000 !important;
       }
+
+      .bd-none-fst-end {
+        border-right: 2px solid #000000 !important;
+        border-top: none !important;
+        border-left: 2px solid #000000 !important;
+        border-bottom: none !important;
+      }
+
       .bd-none-fst-end-start {
         border-right: 2px solid #000000 !important;
         border-top: 2px solid #000000 !important;
         border-left: 2px solid #000000 !important;
         border-bottom: none !important;
       }
+
       .bd-end {
         border-bottom: 2px solid #000000 !important;
       }
+
       .col-attach {
         width: 317px !important;
       }
-      b, p, span {
+      b,
+      p,
+      span {
         margin: 0 !important;
         padding: 0 !important;
+        /* font-size: 10px !important; */
       }
       .width-100 {
         width: 100% !important;
@@ -70,16 +93,19 @@
           Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
           sans-serif;
       }
+     
+      /* ol.custom-list {
+        list-style-type: lower-alpha;
+      } */
       li {
-        margin-bottom: 6px !important;
+        margin-bottom: 6px !important; /* Adds 10px space between items */
       }
       .page-break {
-        page-break-before: always;
+        page-break-before: always; /* Forces content to start on a new page */
       }
     </style>
-
-    {% block extra_css %}{% endblock %}
   </head>
+
   <body>
     <section>
       <div class="d-flex justify-content-center mt-3 mb-3">
@@ -87,16 +113,218 @@
           Download PDF
         </button>
       </div>
-
-      <!-- PDF Content -->
+      <!-- PDF Content Start Here -->
       <div class="container-fluid pdf-hidden" id="pdf-element">
-        {% block content %}{% endblock %}
+        <!-- Page 1 start here -->
+        <div class="page-1">
+          <!-- Header start here -->
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>KSB MIL Controls Limited</h4>
+            <img
+              src="../assets/images/logo.png"
+              alt=""
+              srcset=""
+              style="margin-bottom: 6px !important"
+            />
+          </div>
+          <!-- Header ends here -->
+          <!-- content start here -->
+          <div class="outer-border">
+            <div class="container-fluid" style="padding: 12px !important">
+              <h5>Part A2: General Organization</h5>
+              <!-- 1. Is there any document available, which describes your organisation? -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                1. Is there any document available, which describes your
+                organisation?
+              </p>
+              <small>(Quality Assurance Manual; Organisation chart) </small>
+              <div>YES (Please forward a copy) / NO</div>
+
+              <!-- 2. Is there an independent Quality Assurance department? -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                2. Is there an independent Quality Assurance department?
+              </p>
+              <div>YES / NO</div>
+
+              <!-- 3. Production planning: -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                3. Production planning:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>a. <span> Is production planned systematically? </span></li>
+                <li>YES / NO</li>
+                <li>If so, by which means?</li>
+                <li>
+                  b.
+                  <span>
+                    Are the delivery times planned and continually monitored?
+                  </span>
+                </li>
+                <li>YES / NO</li>
+                <!--  -->
+                <li>b. <span>Production planning and control system </span></li>
+                <li><span>Work Procedure</span> <span>Index Cards </span></li>
+                <!-- Are the delivery times planned and continually monitored?  -->
+                <li>
+                  <span
+                    >Are the delivery times planned and continually monitored?
+                  </span>
+                </li>
+                <li>YES / NO</li>
+                <!--  -->
+                <li>c. <span>Do you inform the customer of delays? </span></li>
+                <li>YES / NO</li>
+                <!--  -->
+              </ol>
+              <!-- List ends here -->
+
+              <!-- 4. Instructions: -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                4. Instructions:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>
+                  a.
+                  <span
+                    >Are there written work instructions for the production
+                    processes?
+                  </span>
+                </li>
+                <li>YES / NO</li>
+                <!-- <li class="d-flex"><span class="me-5"> </span> <span>YES / NO</span></li>
+                <li class="d-flex"><span class="me-5">-  For production </span> </li> -->
+                <div class="row">
+                  <div class="col-4">- For production</div>
+                  <div class="col-4"><span>YES / NO</span></div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For in-process inspection</div>
+                  <div class="col-4"><span>YES / NO</span></div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For final inspection</div>
+                  <div class="col-4"><span>YES / NO</span></div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For outgoing goods inspection</div>
+                  <div class="col-4"><span>YES / NO</span></div>
+                </div>
+                <!--  -->
+                <li>
+                  b.
+                  <span>Are the inspection / work results documented? </span>
+                </li>
+                <li>YES / NO</li>
+                <!--  -->
+              </ol>
+              <!-- List ends here -->
+
+              <!-- 5. Information on the business process:   -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                5. Information on the business process:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>
+                  a.
+                  <span>
+                    On-Time delivery/delivery compliance for last or current
+                    business year (%)</span
+                  >
+                </li>
+                <li>
+                  b.
+                  <span>
+                    Have you implemented a procedure which ensures that
+                    non-conforming products and/or services will be segregated?
+                  </span>
+                </li>
+              </ol>
+              <!-- List ends here -->
+            </div>
+          </div>
+          <!-- content ends here -->
+        </div>
+        <!-- Page 1 ends here -->
+
+        <div class="html2pdf__page-break"></div>
+        <!-- page 3 start here -->
+        <div class="page-3">
+          <!-- Header start here -->
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>KSB MIL Controls Limited</h4>
+            <img
+              src="../assets/images/logo.png"
+              alt=""
+              srcset=""
+              style="margin-bottom: 6px !important"
+            />
+          </div>
+          <!-- Header ends here -->
+
+          <!-- content start here -->
+          <div class="outer-border">
+            <div class="container-fluid" style="padding: 12px !important">
+              <!--  -->
+              <div class="row">
+                <div class="col-6"><span>For Supplier</span></div>
+                <div class="col-6"><span>For KSB MIL Controls Ltd</span></div>
+              </div>
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li><span>Name: </span></li>
+                <li><span>Designation: </span></li>
+                <li><span>Signature: </span></li>
+                <li><span>Date: </span></li>
+              </ol>
+            </div>
+          </div>
+          <!-- content ends here -->
+        </div>
+        <!--  -->
       </div>
     </section>
 
-    <!-- JS Files -->
-    <script src="{% static 'assets/js/html2pdf.bundle.min.js' %}"></script>
-    
+    <!-- html2pdf js file -->
+    <script src="../assets/js/html2pdf.bundle.min.js"></script>
     <script>
       let element = document.getElementById("pdf-element");
 
@@ -117,8 +345,6 @@
           },
         });
       }
-
-      // Prevent radio & checkbox clicks
       document
         .querySelectorAll('input[type="radio"], input[type="checkbox"]')
         .forEach((input) => {
@@ -127,7 +353,5 @@
           });
         });
     </script>
-
-    {% block extra_js %}{% endblock %}
   </body>
 </html>

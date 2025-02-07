@@ -26,6 +26,7 @@ from datetime import datetime
 from django.utils.dateparse import parse_date
 from django.core.paginator import Paginator
 from django.db import transaction
+from reportlab.lib import colors
 
 # Create your views here.
 @unauthenticated_user
@@ -1145,20 +1146,21 @@ def generalOrganization_pdf(request, pk):
     p.drawString(50, y_position, "Part A2:General Organization")
     y_position -= STANDARD_SPACING
 
-    def draw_radio_button(x, y, selected):
-        p.setStrokeColorRGB(0, 0, 0)
-        p.setFillColorRGB(1, 1, 1)
-        p.circle(x, y, 5, fill=0)
-        p.circle(x + 40, y, 5, fill=0)
+    def draw_radio_button(x, y, selected,bg_color=colors.lightgrey, dot_color=colors.black):
+        p.setStrokeColor(bg_color)
+        p.setFillColor(bg_color)
+        p.circle(x, y, 5, fill=1)
+        p.circle(x + 40, y, 5, fill=1)
 
         if selected == "Yes":
-            p.setFillColorRGB(0, 0, 0)
+            p.setFillColor(dot_color)
             p.circle(x, y, 3, fill=1)
         elif selected == "No":
-            p.setFillColorRGB(0, 0, 0)
+            p.setFillColor(dot_color)
             p.circle(x + 40, y, 3, fill=1)
 
-        p.setFillColorRGB(0, 0, 0)
+        p.setFillColor(colors.black)
+        p.setFont("Helvetica", 10)
         p.drawString(x + 10, y - 3, "Yes")
         p.drawString(x + 50, y - 3, "No")
 
@@ -1170,7 +1172,6 @@ def generalOrganization_pdf(request, pk):
         ("    a. Is production planned systematically?", organization.is_production_planned_systamatically, False),
         ("    b. Are delivery times planned and monitored?", organization.is_delivery_timed_planned_and_monitored, False),
         ("    c. Do you inform the customer of delays?", organization.is_inform_customer_of_delay, False),
-        ("    d. Production planning and control system?", organization.production_planning_and_control_system, False),
         ("4. Instructions:", None, True),
         ("    a. Are there written work instructions for the production processes?", organization.is_work_instruction_for_production, False),
         ("    - For Production", organization.is_work_instruction_for_production, False),
@@ -1199,6 +1200,7 @@ def generalOrganization_pdf(request, pk):
         # Draw the question
         p.drawString(50, y_position, question)
         
+        
         if answer is not None:
             is_sub_instruction = question in sub_instructions
             if is_sub_instruction:
@@ -1210,6 +1212,7 @@ def generalOrganization_pdf(request, pk):
                 y_position -= STANDARD_SPACING
         else:
             y_position -= STANDARD_SPACING
+            
 
     # 5th Question
     check_new_page(STANDARD_SPACING * 3)
@@ -1251,3 +1254,8 @@ def generalOrganization_pdf(request, pk):
     p.save()
     
     return response
+
+
+def generalOrganization_view(request,pk):
+    general = get_object_or_404(a2_general_organization_details_header, general_organization_details_header_id=pk)
+    return render(request, 'generalOrganization/a2view.html',{'general':general})

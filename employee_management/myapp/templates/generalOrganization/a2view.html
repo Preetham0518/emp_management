@@ -1,0 +1,707 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>KSB - General Organization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+    <style>
+        /* Center PDF Content */
+        .pdf-container {
+            
+            margin: auto;
+            padding: 30px;
+            background: white;
+            
+        }
+
+        /* Header and Titles */
+        h1, h2, h5,  {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+        }
+
+        /* Radio Button Alignment */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Prevent content cutoff */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: white;
+        }
+
+        /* Force a new page for the Supplier section */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Align logo properly */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="d-flex justify-content-center mt-3 mb-3">
+            <button class="btn btn-success text-light" onclick="downloadpdf()">Download PDF</button>
+        </div>
+
+        <div class="container pdf-container" id="pdf-element">
+            <!-- Header -->
+            <div class="header-container">
+                <h5>KSB MIL Controls Limited</h5>
+                <img src="{% static 'assets/images/logo.png' %}" alt="KSB Logo" class="logo" />
+            </div>
+
+            <hr>
+            <h6>Part A2: General Organization</h6>
+
+            <p><strong>1. Is there any document available describing your organization?</strong></p>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" {% if general.organization_description_document_avaliable == "Yes" %} checked {% endif %} disabled> Yes
+                </label>
+                <label>
+                    <input type="radio" {% if general.organization_description_document_avaliable == "No" %} checked {% endif %} disabled> No
+                </label>
+            </div>
+
+            <p><strong>2. Is there an independent Quality Assurance department?</strong></p>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" {% if general.is_there_an_independant_quality_assurance_department == "Yes" %} checked {% endif %} disabled> Yes
+                </label>
+                <label>
+                    <input type="radio" {% if general.is_there_an_independant_quality_assurance_department == "No" %} checked {% endif %} disabled> No
+                </label>
+            </div>
+
+            <p><strong>3. Production Planning:</strong></p>
+            <ul>
+                <ul>a. Is production planned systematically?</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_production_planned_systamatically == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_production_planned_systamatically == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+                
+                <ul>If so, by which means?</ul>
+
+                <ul>b. Are the delivery times planned and continually monitored?</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+                <ul>c. Do you inform the customer of delays?</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_inform_customer_of_delay == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_inform_customer_of_delay == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+            </ul>
+
+            <p><strong>4. Instructions:</strong></p>
+            <ul>
+                <ul>. Are there written work instructions for the production processes?</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+
+                <ul>- For Production</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+
+                <ul>- For in-process inspection</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+            </ul>
+            <p><strong>5. Information on the business process:</strong></p>
+
+            <p>a. On-Time delivery compliance for last or current business year (%):
+                {{ general.one_time_delivery_compalince_last_or_current_year_percentage }}
+            </p>
+
+            <p>b. Procedure for handling non-conforming products?:</strong> 
+                {{ general.implemented_procedure_for_ensuring_non_conforming_products }}
+            </p>
+
+            <!-- Page Break Before Supplier Section -->
+            <div class="page-break"></div>
+
+            <hr>
+
+            <div class="supplier-signature">
+                <h3>For Supplier</h3>
+                <p><strong>Name:</strong> {{ general.filled_personname }}</p>
+                <p><strong>Designation:</strong> {{ general.filled_persondesignation }}</p>
+                <p><strong>Signature:</strong> {{ general.filled_personsignature }}</p>
+                <p><strong>Date:</strong> {{ general.sendto_buyer_date }}</p>
+            </div>
+
+            <hr>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function downloadpdf() {
+            let element = document.getElementById("pdf-element");
+
+            html2pdf(element, {
+                filename: "User_{{ general.general_organization_details_header_id }}.pdf",
+                margin: 5,
+                image: { type: 'jpeg', quality: 1 },  
+                html2canvas: {
+                    scale: 2,
+                    logging: true,
+                    dpi: 192,
+                    letterRendering: true,
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait",
+                },
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {%load static%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>KSB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- App css -->
+    <link
+      href="../assets/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+      id="app-style"
+    />
+
+    <style>
+      .table {
+        margin: 0 !important;
+      }
+
+      td,
+      th,
+      td {
+        border: 1px solid #000000;
+        font-size: 12px !important;
+      }
+      .outer-border {
+        border: 2px solid black !important;
+        height: 1023px !important;
+      }
+
+      * {
+        /* font-size: 9px; */
+        margin: 0 !important;
+        padding: 1 !important;
+        color: black !important;
+      }
+
+      .address-width {
+        width: 210px !important;
+      }
+
+      .bd-none {
+        border-right: 2px solid #000000 !important;
+        border-top: none !important;
+        border-left: 2px solid #000000 !important;
+        border-bottom: none !important;
+      }
+
+      .bd-none-fst {
+        border-right: 2px solid #000000 !important;
+        border-top: none !important;
+        border-left: 2px solid #000000 !important;
+        border-bottom: none !important;
+      }
+
+      .bd-none-fst-end {
+        border-top: 2px solid #000000 !important;
+      }
+
+      .bd-none-fst-end {
+        border-right: 2px solid #000000 !important;
+        border-top: none !important;
+        border-left: 2px solid #000000 !important;
+        border-bottom: none !important;
+      }
+
+      .bd-none-fst-end-start {
+        border-right: 2px solid #000000 !important;
+        border-top: 2px solid #000000 !important;
+        border-left: 2px solid #000000 !important;
+        border-bottom: none !important;
+      }
+
+      .bd-end {
+        border-bottom: 2px solid #000000 !important;
+      }
+
+      .col-attach {
+        width: 317px !important;
+      }
+      b,
+      p,
+      span {
+        margin: 0 !important;
+        padding: 0 !important;
+        /* font-size: 10px !important; */
+      }
+      .width-100 {
+        width: 100% !important;
+      }
+      * {
+        color: #000000 !important;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+      }
+     
+      /* ol.custom-list {
+        list-style-type: lower-alpha;
+      } */
+      li {
+        margin-bottom: 6px !important; /* Adds 10px space between items */
+      }
+      .page-break {
+        page-break-before: always; /* Forces content to start on a new page */
+      }
+    </style>
+  </head>
+
+  <body>
+    <section>
+      <div class="d-flex justify-content-center mt-3 mb-3">
+        <button class="btn btn-success text-light" onclick="downloadpdf()">
+          Download PDF
+        </button>
+      </div>
+      <!-- PDF Content Start Here -->
+      <div class="container-fluid pdf-hidden" id="pdf-element">
+        <!-- Page 1 start here -->
+        <div class="page-1">
+          <!-- Header start here -->
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>KSB MIL Controls Limited</h4>
+            <img
+              src=""
+              alt=""
+              srcset=""
+              style="margin-bottom: 6px !important"
+            />
+          </div>
+          <!-- Header ends here -->
+          <!-- content start here -->
+          <div class="outer-border">
+            <div class="container-fluid" style="padding: 12px !important">
+              <h5>Part A2: General Organization</h5>
+              <!-- 1. Is there any document available, which describes your organisation? -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                1. Is there any document available, which describes your
+                organisation?
+              </p>
+              <small>(Quality Assurance Manual; Organisation chart) </small>
+              <div class="radio-group">
+                <label>
+                    <input type="radio" {% if general.organization_description_document_avaliable == "Yes" %} checked {% endif %} disabled> Yes
+                </label>
+                <label>
+                    <input type="radio" {% if general.organization_description_document_avaliable == "No" %} checked {% endif %} disabled> No
+                </label>
+            </div>
+
+              <!-- 2. Is there an independent Quality Assurance department? -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                2. Is there an independent Quality Assurance department?
+              </p>
+              <div class="radio-group">
+                <label>
+                    <input type="radio" {% if general.is_there_an_independant_quality_assurance_department == "Yes" %} checked {% endif %} disabled> Yes
+                </label>
+                <label>
+                    <input type="radio" {% if general.is_there_an_independant_quality_assurance_department == "No" %} checked {% endif %} disabled> No
+                </label>
+            </div>
+
+              <!-- 3. Production planning: -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                3. Production planning:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>a. <span> Is production planned systematically? </span></li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_production_planned_systamatically == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_production_planned_systamatically == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <li>If so, by which means?</li>
+                <li>
+                  b.
+                  <span>
+                    Are the delivery times planned and continually monitored?
+                  </span>
+                </li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <!--  -->
+                <li>b. <span>Production planning and control system </span></li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.production_planning_and_control_system == "Work Procedure" %} checked {% endif %} disabled> Work Procedure
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.production_planning_and_control_system == "Index Cards" %} checked {% endif %} disabled> Index Cards
+                    </label>
+                </div>
+                <!-- Are the delivery times planned and continually monitored?  -->
+                <li>
+                  <span
+                    >Are the delivery times planned and continually monitored?
+                  </span>
+                </li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <!--  -->
+                <li>c. <span>Do you inform the customer of delays? </span></li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_inform_customer_of_delay == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_inform_customer_of_delay == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <!--  -->
+              </ol>
+              <!-- List ends here -->
+
+              <!-- 4. Instructions: -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                4. Instructions:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>
+                  a.
+                  <span
+                    >Are there written work instructions for the production
+                    processes?
+                  </span>
+                </li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_work_instruction_for_production == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <!-- <li class="d-flex"><span class="me-5"> </span> <span>YES / NO</span></li>
+                <li class="d-flex"><span class="me-5">-  For production </span> </li> -->
+                <div class="row">
+                  <div class="col-4">- For production</div>
+                  <div class="col-4">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_production == "Yes" %} checked {% endif %} disabled> Yes
+                        </label>
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_production == "No" %} checked {% endif %} disabled> No
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For in-process inspection</div>
+                  <div class="col-4">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                        </label>
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "No" %} checked {% endif %} disabled> No
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For final inspection</div>
+                  <div class="col-4">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_final_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                        </label>
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_final_inspection == "No" %} checked {% endif %} disabled> No
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="row">
+                  <div class="col-4">- For outgoing goods inspection</div>
+                  <div class="col-4">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_outgoing_goods_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                        </label>
+                        <label>
+                            <input type="radio" {% if general.is_work_instruction_for_outgoing_goods_inspection == "No" %} checked {% endif %} disabled> No
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+                <li>
+                  b.
+                  <span>Are the inspection / work results documented? </span>
+                </li>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if general.is_inspection_work_result_documented == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if general.is_inspection_work_result_documented == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+                <!--  -->
+              </ol>
+              <!-- List ends here -->
+
+              <!-- 5. Information on the business process:   -->
+              <p
+                class="fw-bold"
+                style="
+                  margin-top: 12px !important;
+                  margin-bottom: 12px !important;
+                "
+              >
+                5. Information on the business process:
+              </p>
+              <!-- List -->
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li>
+                  a.
+                  <span>
+                    On-Time delivery/delivery compliance for last or current
+                    business year (%)</span
+                  >
+                  <p>{{ general.one_time_delivery_compalince_last_or_current_year_percentage }}</p>
+                </li>
+                <li>
+                  b.
+                  <span>
+                    Have you implemented a procedure which ensures that
+                    non-conforming products and/or services will be segregated?
+                  </span>
+                  <p>{{ general.implemented_procedure_for_ensuring_non_conforming_products }}</p>
+                </li>
+              </ol>
+              <!-- List ends here -->
+            </div>
+          </div>
+          <!-- content ends here -->
+        </div>
+        <!-- Page 1 ends here -->
+
+        <div class="html2pdf__page-break"></div>
+        <!-- page 3 start here -->
+        <div class="page-3">
+          <!-- Header start here -->
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>KSB MIL Controls Limited</h4>
+            <img
+              src="../assets/images/logo.png"
+              alt=""
+              srcset=""
+              style="margin-bottom: 6px !important"
+            />
+          </div>
+          <!-- Header ends here -->
+
+          <!-- content start here -->
+          <div class="outer-border">
+            <div class="container-fluid" style="padding: 12px !important">
+              <!--  -->
+              <div class="row">
+                <div class="col-6"><span>For Supplier</span></div>
+                <div class="col-6"><span>For KSB MIL Controls Ltd</span></div>
+              </div>
+              <ol class="custom-list" style="list-style-type: none">
+                <!--  -->
+                <li><span>Name:{{ general.filled_personname }} </span></li>
+                <li><span>Designation:{{general.filled_persondesignation}} </span></li>
+                <li><span>Signature:{{general.filled_personsignature}} </span></li>
+                <li><span>Date:{{general.sendto_buyer_date}}</span></li>
+              </ol>
+            </div>
+          </div>
+          <!-- content ends here -->
+        </div>
+        <!--  -->
+      </div>
+    </section>
+
+    <!-- html2pdf js file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+      let element = document.getElementById("pdf-element");
+
+      function downloadpdf() {
+        html2pdf(element, {
+          filename: "User_{{ general.general_organization_details_header_id }}.pdf",
+          margin: 5,
+          html2canvas: {
+            scale: 2,
+            logging: true,
+            dpi: 192,
+            letterRendering: true,
+          },
+          jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait",
+          },
+        });
+      }
+      document
+        .querySelectorAll('input[type="radio"], input[type="checkbox"]')
+        .forEach((input) => {
+          input.addEventListener("click", (e) => {
+            e.preventDefault();
+          });
+        });
+    </script>
+ 
+ {% endcomment %}

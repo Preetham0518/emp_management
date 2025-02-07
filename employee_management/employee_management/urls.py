@@ -70,6 +70,7 @@ urlpatterns = [
     path('generalOrganization_add/',generalOrganization_add,name="generalOrganization_add"),
     path('generalOrganization_update/<uuid:pk>/',generalOrganization_update,name="generalOrganization_update"),
     path('generalOrganization_pdf/<uuid:pk>/',generalOrganization_pdf,name="generalOrganization_pdf"),
+    path('generalOrganization_view/<uuid:pk>/',generalOrganization_view,name="generalOrganization_view"),
     ]
 
 if settings.DEBUG:
