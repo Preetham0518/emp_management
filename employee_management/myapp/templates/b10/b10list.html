@@ -449,10 +449,10 @@
                 <p class="question-text">a. Are there records on regular checking of the measuring equipment by an independent organisation?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_regular_checking_of_measuring_equipment == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_regular_checking_of_measuring_equipment %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_regular_checking_of_measuring_equipment == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_regular_checking_of_measuring_equipment %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -461,10 +461,10 @@
                 <p class="question-text">b. Are the records traceable to measuring equipment?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_records_traceable == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_records_traceable %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_records_traceable == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_records_traceable %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -474,10 +474,10 @@
                 <p class="question-text">a. Are the test sample are marked with heat no. / ID No?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_samples_marked_with_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_samples_marked_with_heat_no %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_samples_marked_with_heat_no == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_samples_marked_with_heat_no %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -486,10 +486,10 @@
                 <p class="question-text">b. Are the records traceable to heat no. / ID No?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_records_traceable_to_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_records_traceable_to_heat_no %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_records_traceable_to_heat_no == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_records_traceable_to_heat_no %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -498,10 +498,10 @@
                 <p class="question-text">c. Is the part marked with heat no?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_part_marked_with_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_part_marked_with_heat_no %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_part_marked_with_heat_no == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_part_marked_with_heat_no %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -510,10 +510,10 @@
                 <p class="question-text">d. Are heat Nos. / ID No. traceable to furnace charge</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_heat_no_traceable_to_furnace_change == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_heat_no_traceable_to_furnace_change %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_heat_no_traceable_to_furnace_change == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_heat_no_traceable_to_furnace_change %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -523,10 +523,10 @@
                 <p class="question-text">a. Are the prototype parts checked internally? If so, which method is used?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_prototype_parts_checked_internally == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_prototype_parts_checked_internally %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_prototype_parts_checked_internally == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_prototype_parts_checked_internally %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -535,10 +535,10 @@
                 <p class="question-text">b. Are production parts checked by random sampling?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_parts_checked_by_random_sampling == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_parts_checked_by_random_sampling %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_parts_checked_by_random_sampling == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_parts_checked_by_random_sampling %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -563,10 +563,10 @@
 
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_welding_procedure_qualified == "Yes" %} checked {% endif %} disabled> Yes
+                        <input type="radio" {% if material.is_welding_procedure_qualified %} checked {% endif %} disabled> Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_welding_procedure_qualified == "No" %} checked {% endif %} disabled> No
+                        <input type="radio" {% if not material.is_welding_procedure_qualified %} checked {% endif %} disabled> No
                     </label>
                 </div>
             </div>
@@ -576,10 +576,10 @@
                 <p class="question-text">b. Are the welders qualified to ASME Code / DIN etc.?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_welders_qualified == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if material.is_welders_qualified %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_welders_qualified == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_welders_qualified %} checked {% endif %} disabled>No
                     </label>
                 </div>
             </div>
@@ -596,10 +596,10 @@
                 <p class="question-text">c. Are all defects are checked by NDT prior to welding?</p>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" {% if material.is_defects_checked_prior_to_welding == "Yes" %} checked {% endif %} disabled>Yes
+                        <input type="radio" {% if  material.is_defects_checked_prior_to_welding %} checked {% endif %} disabled>Yes
                     </label>
                     <label>
-                        <input type="radio" {% if material.is_defects_checked_prior_to_welding == "No" %} checked {% endif %} disabled>No
+                        <input type="radio" {% if not material.is_defects_checked_prior_to_welding %} checked {% endif %} disabled>No
                     </label>
                 </div>
                 {% if material.certiticate_file %}
@@ -610,36 +610,19 @@
             </div>
 
             <p><strong>7. Rejects and Rework</strong></p>
-
             <div class="question-group">
                 <div class="question-container">
-                    <p class="question-text">a. How is defective material identified?</p>
-                </div>
-
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" {% if material.defective_material_identification_method == "Yes" %} checked {% endif %} disabled> Yes
-                    </label>
-                    <label>
-                        <input type="radio" {% if material.defective_material_identification_method == "No" %} checked {% endif %} disabled> No
-                    </label>
+                        <p class="question-text">a. How is defective material identified? {{ material.defective_material_identification_method}}</p>
                 </div>
             </div>
 
             <div class="question-group">
                 <div class="question-container">
-                    <p class="question-text">b. What is the rejects and rework rate??</p>
-                </div>
-
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" {% if material.reject_rework_rate == "Yes" %} checked {% endif %} disabled> Yes
-                    </label>
-                    <label>
-                        <input type="radio" {% if material.reject_rework_rate == "No" %} checked {% endif %} disabled> No
-                    </label>
+                    <p class="question-text">b. What is the rejects and rework rate?{{ material.reject_rework_rate }}</p>
                 </div>
             </div>
+
+            
             <div class="reject-rework">
                 <div class="rate-group">
                     <div class="rate-item">
@@ -677,8 +660,8 @@
 
             <hr>
             <div class="actions">
-                <a href="{% url 'b10_update' pk=material.pk %}" class="btn btn-secondary">Edit</a>
-                <a href="{% url 'b10_view' pk=material.pk %}" class="btn btn-secondary">View</a>
+                <a href="{% url 'b10_update' pk=material.material_inspection_questionnaire_details_header_id %}" class="btn btn-secondary">Edit</a>
+                <a href="{% url 'b10_view' pk=material.material_inspection_questionnaire_details_header_id %}" class="btn btn-secondary">View</a>
             </div>
         {% endfor %}
     </div>

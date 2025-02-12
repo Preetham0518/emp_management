@@ -218,6 +218,10 @@ class b10Form(forms.ModelForm):
             'foundary_forge_shop_extern_reject_rework_rate','machining_reject_rework_rate','finished_product_reject_rework_rate',
             'sendto_buyer_date','filled_personname','filled_persondesignation','filled_personsignature',
         ]
+    BOOLEAN_CHOICES = [
+        (True,"Yes"),
+        (False,"No"),
+    ]
         
     liquid_penetrant_inspection = forms.BooleanField(
         required=False,
@@ -300,7 +304,7 @@ class b10Form(forms.ModelForm):
         widget=forms.CheckboxInput()
     )
     three_d_measuring_machine = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect,
         required=False,
     )
@@ -381,37 +385,37 @@ class b10Form(forms.ModelForm):
         widget=forms.TextInput(attrs={'readonly': 'readonly', 'value': '?'})
     )
     is_regular_checking_of_measuring_equipment = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_records_traceable = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_samples_marked_with_heat_no = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_records_traceable_to_heat_no = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_part_marked_with_heat_no = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_heat_no_traceable_to_furnace_change = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
     is_prototype_parts_checked_internally = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
@@ -420,7 +424,7 @@ class b10Form(forms.ModelForm):
         widget=forms.TextInput(attrs={'readonly': 'readonly', 'value': '?'})
     )
     is_parts_checked_by_random_sampling = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
@@ -429,7 +433,7 @@ class b10Form(forms.ModelForm):
         widget=forms.TextInput(attrs={'readonly': 'readonly', 'value': '?'})
     )
     is_welding_procedure_qualified = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
@@ -438,7 +442,7 @@ class b10Form(forms.ModelForm):
         widget=forms.TextInput(attrs={'readonly': 'readonly', 'value': '?'})
     )
     is_welders_qualified = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )
@@ -447,7 +451,7 @@ class b10Form(forms.ModelForm):
         widget=forms.TextInput(attrs={'readonly': 'readonly', 'value': '?'})
     )
     is_defects_checked_prior_to_welding = forms.ChoiceField(
-        choices=[('Yes','Yes'),('No','No')],
+        choices=BOOLEAN_CHOICES,
         widget=forms.RadioSelect(),
         required=False,
     )

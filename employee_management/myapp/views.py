@@ -1279,7 +1279,7 @@ def b10_add(request):
     
     
 def b10_update(request,pk):
-    material = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, pk=pk)
+    material = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, material_inspection_questionnaire_details_header_id=pk)
 
     if request.method == "POST":
         form = b10Form(request.POST, instance=material)
@@ -1294,5 +1294,5 @@ def b10_update(request,pk):
 
 
 def b10_view(request,pk):
-    materials = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, material_inspection_questionnaire_details_header_id=pk)
-    return render(request, 'b10/b10_view.html',{'materials':materials})
+    material = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, material_inspection_questionnaire_details_header_id=pk)
+    return render(request, 'b10/b10_view.html',{'material':material})
