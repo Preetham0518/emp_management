@@ -16,6 +16,7 @@
             margin: auto;
             padding: 30px;
             background: white;
+            margin-bottom: 20px;
             
         }
 
@@ -28,6 +29,13 @@
         .question {
             margin-bottom: 15px;
         }
+        .sub-question {
+          display: flex;
+          justify-content: space-between;
+          margin-left: 40px;
+          max-width: 500px;
+      }
+
 
         /* Radio Button Alignment */
         .radio-group {
@@ -115,8 +123,11 @@
                         <input type="radio" {% if general.is_production_planned_systamatically == "No" %} checked {% endif %} disabled> No
                     </ul>
                 </div>
-                
-                <ul>If so, by which means?</ul>
+                <br>
+
+              <ul>
+                <p>If so, by which means?</p>
+              </ul>
 
                 <ul>b. Are the delivery times planned and continually monitored?</ul>
                 <div class="radio-group">
@@ -136,7 +147,18 @@
                         <input type="radio" {% if general.is_inform_customer_of_delay == "No" %} checked {% endif %} disabled> No
                     </ul>
                 </div>
+
+                <ul>d. Production planning and control system</ul>
+                <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.production_planning_and_control_system == "Work Procedure" %} checked {% endif %} disabled> Work Procedure
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.production_planning_and_control_system == "Index cards" %} checked {% endif %} disabled> Index cards
+                    </ul>
+                </div>
             </ul>
+
 
             <p><strong>4. Instructions:</strong></p>
             <ul>
@@ -150,6 +172,7 @@
                     </ul>
                 </div>
 
+                <ul class="sub-question">
                 <ul>- For Production</ul>
                 <div class="radio-group">
                     <ul>
@@ -159,7 +182,9 @@
                         <input type="radio" {% if general.is_work_instruction_for_production == "No" %} checked {% endif %} disabled> No
                     </ul>
                 </div>
+              </ul>
 
+                <ul class="sub-question">
                 <ul>- For in-process inspection</ul>
                 <div class="radio-group">
                     <ul>
@@ -169,7 +194,49 @@
                         <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "No" %} checked {% endif %} disabled> No
                     </ul>
                 </div>
+              </ul>
+
+                <ul class="sub-question">
+                  <ul>- For final inspection</ul>
+                  <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_final_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_work_instruction_for_final_inspection == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+              </ul>
+              
+                <ul class="sub-question">
+                  <ul>- For outgoing goods inspection</ul>
+                  <div class="radio-group">
+                  <ul>
+                      <input type="radio" {% if general.is_work_instruction_for_outgoing_goods_inspection == "Yes" %} checked {% endif %} disabled> Yes
+                  </ul>
+                  <ul>
+                      <input type="radio" {% if general.is_work_instruction_for_outgoing_goods_inspection == "No" %} checked {% endif %} disabled> No
+                  </ul>
+              </div>
             </ul>
+            
+              <ul>b. Are the inspection / work results documented?</ul>
+                  <div class="radio-group">
+                    <ul>
+                        <input type="radio" {% if general.is_inspection_work_result_documented == "Yes" %} checked {% endif %} disabled> Yes
+                    </ul>
+                    <ul>
+                        <input type="radio" {% if general.is_inspection_work_result_documented == "No" %} checked {% endif %} disabled> No
+                    </ul>
+                </div>
+                <br>
+                
+                
+
+                
+
+
+
             <p><strong>5. Information on the business process:</strong></p>
 
             <p>a. On-Time delivery compliance for last or current business year (%):

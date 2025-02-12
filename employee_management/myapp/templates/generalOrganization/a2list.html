@@ -17,10 +17,11 @@
         justify-content: space-between;
         align-items: center;
         margin-left: 40px;
+        max-width: 700px;
     }
     .radio-group {
         display: flex;
-        gap: 20px; /* Space between Yes and No */
+        gap: 20px; 
         align-items: center;
     }
 </style>
@@ -76,8 +77,17 @@
                         <input type="radio" {% if general.is_delivery_timed_planned_and_monitored == "No" %} checked {% endif %} disabled> No
                     </label>
                 </div>
-                
-            </ul>
+
+                    <li>c.Production planning and control system</li>
+                    <div class="radio-group">
+                      <label>
+                        <input type="radio" {% if general.production_planning_and_control_system == "Work Procedure" %} checked {% endif %} disabled> Work Procedure
+                      </label>
+                    <label>
+                        <input type="radio" {% if general.is_work_instruction_for_in_process_inspection == "Index Cards" %} checked {% endif %} disabled> Index cards
+                    </label>
+                  </div>
+              </li>
 
             <p><strong>4. Instructions:</strong></p>
             <ul>
@@ -126,7 +136,9 @@
                         </label>
                     </div>
                 </li>
-            </ul>
+
+
+
 
             <p><strong>5. Information on the business process:</strong></p>
             <ul>

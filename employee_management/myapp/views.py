@@ -1,7 +1,7 @@
 import pandas as pd
 from django.shortcuts import render, redirect
-from .models import Department, Designation , Location , Employee, Skill,a2_general_organization_details_header
-from .forms import DepartmentForm, DesignationForm , LocationForm, EmployeeForm,SkillForm,CreateUserForm, GeneralOrganizationForm
+from .models import Department, Designation , Location , Employee, Skill,a2_general_organization_details_header, b10_material_inspection_testing_equipment_services_questionnaire_details_header
+from .forms import DepartmentForm, DesignationForm , LocationForm, EmployeeForm,SkillForm,CreateUserForm, GeneralOrganizationForm, b10Form
 from django.shortcuts import get_object_or_404
 from .forms import SkillFormSet
 from django.forms import modelformset_factory
@@ -1259,3 +1259,40 @@ def generalOrganization_pdf(request, pk):
 def generalOrganization_view(request,pk):
     general = get_object_or_404(a2_general_organization_details_header, general_organization_details_header_id=pk)
     return render(request, 'generalOrganization/a2view.html',{'general':general})
+
+
+def b10list(request):
+    materials = b10_material_inspection_testing_equipment_services_questionnaire_details_header.objects.all()
+    return render(request,'b10/b10list.html',{'materials':materials})
+
+
+def b10_add(request):
+    if request.method == 'POST':
+        form = b10Form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('b10list')
+        
+    else:
+        form = b10Form()
+    return render(request,'b10/b10_add.html',{'form':form})
+    
+    
+def b10_update(request,pk):
+    material = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, pk=pk)
+
+    if request.method == "POST":
+        form = b10Form(request.POST, instance=material)
+        if form.is_valid():
+            form.save()
+            return redirect('b10list')
+        else:
+            print(form.errors)
+    else:
+        form = b10Form(instance=material)
+    return render(request, 'b10/b10_edit.html', {'form': form})
+
+
+def b10_view(request,pk):
+    materials = get_object_or_404(b10_material_inspection_testing_equipment_services_questionnaire_details_header, material_inspection_questionnaire_details_header_id=pk)
+    return render(request, 'b10/b10_view.html',{'materials':materials})

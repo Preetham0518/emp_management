@@ -1,0 +1,687 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .question {
+        margin-bottom: 15px;
+    }
+
+    .checkbox-means-group {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .means-group {
+        margin-left: auto;
+        width: 400px;
+    }
+
+    .question-group {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 900px;
+        margin-bottom: 5px;
+    }
+
+    .question-text {
+        flex: 1;
+    }
+
+    .radio-group {
+        display: flex;
+        flex-direction : row;
+        align-items: center;
+        gap: 15px;
+    }
+    .certification-text {
+        font-style: italic;
+        color: #333; 
+        margin-left: 15px; 
+    }
+    .reject-rework {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; 
+        max-width: 800px; 
+    }
+    
+    .rate-group {
+        display: flex;
+        justify-content: space-between; /
+        gap: 20px; /
+    }
+    
+    .rate-item {
+        width: 50%; 
+    }
+</style>
+
+<div class="container">
+    <h1 class="heading">KSB MIL Controls Limited</h1>
+    <a href="{% url 'b10_add' %}" class="btn btn-primary">Add</a>
+    <hr>
+
+    <div id="pdf-element">
+        {% for material in materials %}
+        <div class="question">
+            <p><strong>Part B9: Questionnaire for Welding/Fabrication Shops</strong></p>
+
+            <p><strong>1. Production welding facilities:</strong></p>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.liquid_penetrant_inspection %} checked {% endif %} disabled>
+                            Liquid penetrant inspection
+                        </label>
+                    </ul>
+                </div>
+                {% if material.liquid_penetrant_inspection_means %}
+                <div class="means-group">
+                    <label>Means?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.magnetic_particle_test %} checked {% endif %} disabled>
+                            Magnetic Particle Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.magnetic_particle_test_means %}
+                <div class="means-group">
+                    <label>Means?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if material.magnetic_particle_test_equipment %}
+            <div class="means-group">
+                <label>Equipments?</label>
+            </div>
+            {% endif %}
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.ultrasonic_test %} checked {% endif %} disabled>
+                            Ultrasonic Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.ultrasonic_test_equipment %}
+                <div class="means-group">
+                    <label>Equipments?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.radio_graphic_test_with_xray_tube %} checked {% endif %} disabled>
+                            Radiographic test with X-Ray tube
+                        </label>
+                    </ul>
+                </div>
+                {% if material.radio_graphic_test_with_xray_tube_equipment %}
+                <div class="means-group">
+                    <label>Equipments?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.radio_graphic_test_with_gama_radiation %} checked {% endif %} disabled>
+                            Radiographic test with Gamma radiation
+                        </label>
+                    </ul>
+                </div>
+                {% if material.radio_graphic_test_with_gama_radiation_elements %}
+                <div class="means-group">
+                    <label>Which One?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.pressure_test %} checked {% endif %} disabled>
+                            Pressure Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.pressure_test_type %}
+                <div class="means-group">
+                    <label>Equipments?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.leak_test %} checked {% endif %} disabled>
+                            Leak Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.leak_test_type %}
+                <div class="means-group">
+                    <label>Which One?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.identification_test %} checked {% endif %} disabled>
+                            Identification Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.identification_test_type %}
+                <div class="means-group">
+                    <label>Equipment?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.diamensional_check_mannual %} checked {% endif %} disabled>
+                            Dimensional Check
+                        </label>
+                    </ul>
+                </div>
+                {% if material.diamensional_check_mannual_equipment %}
+                <div class="means-group">
+                    <label>Equipment?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.diamensional_check %} checked {% endif %} disabled>
+                            Dimensional Check
+                        </label>
+                    </ul>
+                </div>
+                <div class="means-group">
+                    <label>
+                        <input type="radio" {% if material.three_d_measuring_machine == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.three_d_measuring_machine == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+            </div>
+
+            
+            <p><strong>2. Destructive Examination:</strong></p>
+            <p><strong>a. Mechanical Tests</strong></p>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.tension_test %} checked {% endif %} disabled>
+                            Tension Test
+                        </label>
+                    </ul>
+                </div>
+                {% if material.hot_tension_test_temp %}
+                <div class="means-group">
+                    <label>Hot tension upto(OCelsius)</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.notched_bar_impact_bending_test %} checked {% endif %} disabled>
+                            Notched bar impact bending tests at temperature from to
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.iso_v_specimen %} checked {% endif %} disabled>
+                            ISO V Specimen (DIN)
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.charpy_v_notch_specimen %} checked {% endif %} disabled>
+                            Charpy V-Notch specimens (ASME)
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.hardness_test %} checked {% endif %} disabled>
+                            Hardness Test
+                        </label>
+                    </ul>
+                </div>
+                <div class="means-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.brinell %}checked{% endif %} disabled>
+                            Brinell
+                        </label>
+                    </ul>
+                </div>
+                <div class="means-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.vickers %}checked{% endif %} disabled>
+                            Vickers
+                        </label>
+                    </ul>
+                </div>
+                <div class="means-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.rockwell %}checked{% endif %} disabled>
+                            Rockwell
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.other_mechanical_test %} checked {% endif %} disabled>
+                            Others
+                        </label>
+                    </ul>
+                </div>
+                {% if material.other_mechanical_test_detail %}
+                <div class="means-group">
+                    <label>Which Ones?</label>
+                </div>
+                {% endif %}
+            </div>
+
+            
+            <p><strong>b. Metallographic tests:</strong></p>
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.macro %} checked {% endif %} disabled>
+                            Macro
+                        </label>
+                    </ul>
+                </div>
+                <div class="means-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.micro %} checked {% endif %} disabled>
+                            Micro
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.intergrannular_corrosion %} checked {% endif %} disabled>
+                            Intergranular corrosion (IGC)
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+            
+            <p><strong>c. Chemical Analysis:</strong></p>
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.wet_analysis %} checked {% endif %} disabled>
+                            Wet analysis
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.spectro_scopic_analysis %} checked {% endif %} disabled>
+                            Spectroscopic analysis
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.sand_analysis_for_foundry_sand %} checked {% endif %} disabled>
+                            Sand analysis of foundry sand
+                        </label>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkbox-means-group">
+                <div class="checkbox-group">
+                    <ul>
+                        <label>
+                            <input type="checkbox" {% if material.other_chemical_analysis_method %} checked {% endif %} disabled>
+                            Other methods
+                        </label>
+                    </ul>
+                </div>
+                {% if material.other_chemical_analysis_method_detail %}
+                <div class="means-group">
+                    <label>Which Ones?</label>
+                </div>
+                {% endif %}
+            </div>
+
+        
+            <p><strong>d. Calibration</strong></p>
+            <div class="question-group">
+                <p class="question-text">a. Are there records on regular checking of the measuring equipment by an independent organisation?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_regular_checking_of_measuring_equipment == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_regular_checking_of_measuring_equipment == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <p class="question-text">b. Are the records traceable to measuring equipment?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_records_traceable == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_records_traceable == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <p><strong>4. Marking of parts</strong></p>
+            <div class="question-group">
+                <p class="question-text">a. Are the test sample are marked with heat no. / ID No?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_samples_marked_with_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_samples_marked_with_heat_no == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <p class="question-text">b. Are the records traceable to heat no. / ID No?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_records_traceable_to_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_records_traceable_to_heat_no == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <p class="question-text">c. Is the part marked with heat no?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_part_marked_with_heat_no == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_part_marked_with_heat_no == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <p class="question-text">d. Are heat Nos. / ID No. traceable to furnace charge</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_heat_no_traceable_to_furnace_change == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_heat_no_traceable_to_furnace_change == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <p><strong>5. Prototype sampling / Production</strong></p>
+            <div class="question-group">
+                <p class="question-text">a. Are the prototype parts checked internally? If so, which method is used?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_prototype_parts_checked_internally == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_prototype_parts_checked_internally == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <p class="question-text">b. Are production parts checked by random sampling?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_parts_checked_by_random_sampling == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_parts_checked_by_random_sampling == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+            {% if material.random_sampling_checking_method%}
+            <div class="question-group">
+                <label>
+                    If so, which method is used?
+                </label>
+            </div>
+            {%endif%}
+
+            <p><strong>6. Repairs/Production welds</strong></p>
+
+            <div class="question-group">
+                <div class="question-container">
+                    <p class="question-text">a. Is the welding procedure qualified to ASME Code / DIN / etc.?
+                        {% if material.welding_procedure_qualified_standard %}
+                            <label>If so, according to which standard?</label>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_welding_procedure_qualified == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_welding_procedure_qualified == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="question-group">
+                <p class="question-text">b. Are the welders qualified to ASME Code / DIN etc.?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_welders_qualified == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_welders_qualified == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+            </div>
+
+            {% if material.welders_qualified_standard%}
+            <div class="question-group">
+                <label>
+                    If so, according to which standard?
+                </label>
+            </div>
+            {%endif%}
+
+            <div class="question-group">
+                <p class="question-text">c. Are all defects are checked by NDT prior to welding?</p>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.is_defects_checked_prior_to_welding == "Yes" %} checked {% endif %} disabled>Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.is_defects_checked_prior_to_welding == "No" %} checked {% endif %} disabled>No
+                    </label>
+                </div>
+                {% if material.certiticate_file %}
+                <div class="question-group">
+                    <p class="certification-text">Attached copies of relevant certifications</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <p><strong>7. Rejects and Rework</strong></p>
+
+            <div class="question-group">
+                <div class="question-container">
+                    <p class="question-text">a. How is defective material identified?</p>
+                </div>
+
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.defective_material_identification_method == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.defective_material_identification_method == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question-container">
+                    <p class="question-text">b. What is the rejects and rework rate??</p>
+                </div>
+
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" {% if material.reject_rework_rate == "Yes" %} checked {% endif %} disabled> Yes
+                    </label>
+                    <label>
+                        <input type="radio" {% if material.reject_rework_rate == "No" %} checked {% endif %} disabled> No
+                    </label>
+                </div>
+            </div>
+            <div class="reject-rework">
+                <div class="rate-group">
+                    <div class="rate-item">
+                        <label>Foundry / Forge shop intern %</label>
+                        <p>{{ foundary_forge_shop_intern_reject_rework_rate }}</p>
+                    </div>
+            
+                    <div class="rate-item">
+                        <label>Foundry / Forge shop extern %</label>
+                        <p>{{ foundary_forge_shop_extern_reject_rework_rate }}</p>
+                    </div>
+                </div>
+            
+                <div class="rate-group">
+                    <div class="rate-item">
+                        <label>Machining %</label>
+                        <p>{{ machining_reject_rework_rate }}</p>
+                    </div>
+            
+                    <div class="rate-item">
+                        <label>Finished Products %</label>
+                        <p>{{ finished_product_reject_rework_rate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>For Supplier</p>
+            <div class="supplier-signature">
+                <h3>For Supplier</h3>
+                <p><strong>Name:</strong> {{ material.filled_personname }}</p>
+                <p><strong>Designation:</strong> {{ material.filled_persondesignation }}</p>
+                <p><strong>Signature:</strong> {{ material.filled_personsignature }}</p>
+                <p><strong>Date:</strong> {{ material.sendto_buyer_date }}</p>
+            </div>
+
+            <hr>
+            <div class="actions">
+                <a href="{% url 'b10_update' pk=material.pk %}" class="btn btn-secondary">Edit</a>
+                <a href="{% url 'b10_view' pk=material.pk %}" class="btn btn-secondary">View</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
